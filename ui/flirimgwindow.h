@@ -23,7 +23,7 @@ class flirImg;
 
 
 
-class flirbabaWindow : public QWidget
+class flirImgWindow : public QWidget
 {
     Q_OBJECT
 public slots:
@@ -37,7 +37,7 @@ public slots:
     { qDebug() << " flirbabaWindow::emitBlobAvgTempMilaBhosadiwaale(d) - blob avg temp mil gaya signal emitted " << d;
       emit blobAvgTempLeleMadarchod(d); }
 public:
-    flirbabaWindow(QWidget *parent = 0);
+    flirImgWindow(QWidget *parent = 0);
     void readImage(flirImg*);
     void setupScene();
     void updateOverlaidImage(cv::Mat);

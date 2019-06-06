@@ -25,56 +25,55 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    tabberghostwindow.cpp \
-    shellexecutor.cpp \
-    tgfstabview.cpp \
-    tgfstabbar.cpp \
-    tgfstabbedwindow.cpp \
-    tgfstabbedwindowprivate.cpp \
-    segmentorwindow.cpp \
-    segmentor.cpp \
-    segmentorparams.cpp \
-    segmentorframe.cpp \
-    flirimg.cpp \
-    flirimgmetadata.cpp \
-    errmsgs.cpp \
-    exec.cpp \
-    ui/flirbabawindow.cpp \
-    ui/flirimgframe.cpp \
-    cmdstrings.cpp \
-    tgfsmainwindow.cpp \
-    progressbarframe.cpp \
-    superslider.cpp \
-    rangeslider.cpp \
-    blob.cpp \
-    imgoperatorwindows.cpp
+        shellexecutor.cpp \
+        segmentor.cpp \
+        segmentorparams.cpp \
+        flirimg.cpp \
+        flirimgmetadata.cpp \
+        errmsgs.cpp \
+        exec.cpp \
+        cmdstrings.cpp \
+        blob.cpp \
+        imgoperatorwindows.cpp \
+        ui/flirimgframe.cpp \
+        ui/flirimgwindow.cpp \
+        ui/tgfstabview.cpp \
+        ui/tgfstabbar.cpp \
+        ui/tgfstabbedwindow.cpp \
+        ui/tgfstabbedwindowprivate.cpp \
+        ui/segmentorwindow.cpp \
+        ui/tabberghostwindow.cpp \
+        ui/segmentorframe.cpp \
+        ui/tgfsmainwindow.cpp \
+        ui/progressbarframe.cpp \
+        ui/superslider.cpp \
+        ui/rangeslider.cpp
 
 HEADERS += \
     shellexecutor.h \
-    tgfstabview.h \
-    tgfstabbar.h \
-    tgfstabbedwindow.h \
-    tgfstabbedwindowprivate.h \
-    tgfsghostwindow.h \
-    segmentorwindow.h \
     segmentor.h \
     segmentorparams.h \
-    segmentorframe.h \
     flirimg.h \
     flirimgmetadata.h \
     utilfunc.h \
     errmsgs.h \
     exec.h \
-    ui/flirbabawindow.h \
-    ui/flirimgframe.h \
     cmdstrings.h \
-    tgfsmainwindow.h \
-    progressbarframe.h \
-    superslider.h \
-    rangeslider.h \
     blob.h \
     imgoperatorwindows.h \
-    tabberghostwindow.h\
+    ui/flirimgwindow.h \
+    ui/tgfstabview.h \
+    ui/tgfstabbar.h \
+    ui/tgfstabbedwindow.h \
+    ui/tgfstabbedwindowprivate.h \
+    ui/tgfsghostwindow.h \
+    ui/segmentorwindow.h \
+    ui/tgfsmainwindow.h \
+    ui/progressbarframe.h \
+    ui/superslider.h \
+    ui/rangeslider.h \
+    ui/segmentorframe.h \
+    ui/flirimgframe.h \
 
 FORMS +=
 

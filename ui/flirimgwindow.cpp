@@ -1,6 +1,6 @@
-#include "flirbabawindow.h"
+#include "flirimgwindow.h"
 //#include "flirimgpixel.h"
-#include "flirbabawindow.h"
+#include "flirimgwindow.h"
 #include "flirimgframe.h"
 #include "flirimg.h"
 
@@ -8,14 +8,14 @@
 
 using namespace std;
 
-flirbabaWindow::flirbabaWindow(QWidget *parent)
+flirImgWindow::flirImgWindow(QWidget *parent)
     : QWidget(parent)
 {
     // qDebug() << "flirbabaWindow : flirBabaWindow() constructor ";
 }
 
 #include <QFileDialog>
-void flirbabaWindow::readImage(flirImg* flirImgObject)
+void flirImgWindow::readImage(flirImg* flirImgObject)
 {
     this->fimg  = flirImgObject;
 
@@ -26,7 +26,7 @@ void flirbabaWindow::readImage(flirImg* flirImgObject)
     connectEverything();
 }
 
-void flirbabaWindow::connectEverything()
+void flirImgWindow::connectEverything()
 {
     connect(mainImg, SIGNAL(leafButtonStatus(bool)),
             this,    SLOT(emitLeafButtonSignal(bool)));
@@ -41,7 +41,7 @@ void flirbabaWindow::connectEverything()
             mainImg, SLOT(updateBlobAvgTemp(double)));
 }
 
-void flirbabaWindow::setupWindow()
+void flirImgWindow::setupWindow()
 {
     v1Splitter = new QSplitter;
     v2Splitter = new QSplitter;
@@ -61,17 +61,17 @@ void flirbabaWindow::setupWindow()
     setWindowTitle(tr("FLIR Img Processor"));
 }
 
-void flirbabaWindow::setupScene()
+void flirImgWindow::setupScene()
 {
 
 }
 
-void flirbabaWindow::updateOverlaidImage(cv::Mat overlay)
+void flirImgWindow::updateOverlaidImage(cv::Mat overlay)
 {
     mainImg->updateWithOverlay(overlay);
 }
 
-void flirbabaWindow::restoreOriginalImage()
+void flirImgWindow::restoreOriginalImage()
 {
     mainImg->restoreOriginalImage();
 }

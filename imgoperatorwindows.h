@@ -3,8 +3,8 @@
 
 #include "segmentor.h"
 #include "flirimg.h"
-#include "segmentorwindow.h"
-#include "flirbabawindow.h"
+#include "ui/segmentorwindow.h"
+#include "ui/flirimgwindow.h"
 
 class imgOperatorWindows : public QObject
 {
@@ -25,12 +25,12 @@ public:
 
     flirImg*         getFlirImg()         { return this->fimg;      }
     Segmentor*       getSegmentor()       { return this->segmentor; }
-    flirbabaWindow*  getFlirbabaWindow()  { return this->fW; }
+    flirImgWindow*  getFlirbabaWindow()  { return this->fW; }
     segmentorWindow* getSegmentorWindow() { return this->sW; }
 
 private:
     int                      numOfBlobs;
-    flirbabaWindow           *fW;
+    flirImgWindow           *fW;
     segmentorWindow          *sW;
     flirImg                  *fimg;
     Segmentor                *segmentor;

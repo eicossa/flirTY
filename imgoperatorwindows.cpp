@@ -2,7 +2,7 @@
 
 imgOperatorWindows::imgOperatorWindows(QWidget *parent)
 {
-    fW            = new flirbabaWindow();
+    fW            = new flirImgWindow();
     sW            = new segmentorWindow();
     fimg          = new flirImg();
     segmentor     = new Segmentor();

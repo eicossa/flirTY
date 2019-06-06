@@ -1,4 +1,4 @@
-#include "tgfstabbedwindow.h"
+#include "ui/tgfstabbedwindow.h"
 #include <QObject>
 #include <QWidget>
 #include <QApplication>
@@ -6,7 +6,7 @@
 #include <QToolBar>
 #include <QAction>
 #include <QMenuBar>
-#include "tgfsmainwindow.h"
+#include "ui/tgfsmainwindow.h"
 #include <QThread>
 
 void changeEndianness(unsigned short x)
@@ -56,7 +56,7 @@ void testOnlyFlirImg()
 
 void oneImageAtATime(tgfsTabbedWindow &w)
 {
-    flirbabaWindow *fW = new flirbabaWindow();
+    flirImgWindow *fW = new flirImgWindow();
     segmentorWindow *sW = new segmentorWindow();
 
     w.addView(fW, QString("Flirbaba Viewer"));
