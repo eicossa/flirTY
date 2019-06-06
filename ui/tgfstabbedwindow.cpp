@@ -16,16 +16,16 @@ tgfsTabbedWindow::tgfsTabbedWindow(QWidget *parent) :
     numOfImagesDisplayed = 1;
 
 
-    fWindows      = std::vector<flirImgWindow*>();
-    sWindows      = std::vector<segmentorWindow*>();
-    fImgs         = std::vector<flirImg*>();
-    segmentors    = std::vector<Segmentor*>();
-    for(int loopi=0; loopi <5; loopi++){
-        fWindows.push_back(new flirImgWindow());
-        sWindows.push_back(new segmentorWindow());
-        fImgs.push_back(new flirImg());
-        segmentors.push_back(new Segmentor());
-    }
+//    fWindows      = std::vector<flirImgWindow*>();
+//    sWindows      = std::vector<segmentorWindow*>();
+//    fImgs         = std::vector<flirImg*>();
+//    segmentors    = std::vector<Segmentor*>();
+//    for(int loopi=0; loopi <5; loopi++){
+//        fWindows.push_back(new flirImgWindow());
+//        sWindows.push_back(new segmentorWindow());
+//        fImgs.push_back(new flirImg());
+//        segmentors.push_back(new Segmentor());
+//    }
 }
 
 tgfsTabbedWindow::~tgfsTabbedWindow()
@@ -127,22 +127,6 @@ void tgfsTabbedWindow::openImagesFileDialog()
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void tgfsTabbedWindow::loadDefaultImage()
 {
     qDebug() << "Current Path : " << QDir::currentPath();
@@ -177,7 +161,7 @@ void tgfsTabbedWindow::makeEverythingHappenWithOneImageAtATime(QString imgPath)
     fW = new flirImgWindow();
     sW = new segmentorWindow();
 
-    fW->readImage(fimg);
+    fW->initFlirImgWindow(fimg, segmentor);
     sW->readImage(segmentor);
 
     addView(fW, QString("Flirbaba Viewer"));
@@ -282,7 +266,7 @@ void tgfsTabbedWindow::addAnotherFlirImgAndSegmentorObj(QString imgPath)
     flirImgWindow *fw  = fWindows.at(numOfImagesDisplayed);
     segmentorWindow *sw = sWindows.at(numOfImagesDisplayed);
 
-    fw->readImage(f);
+    fw->initFlirImgWindow(f);
     sw->readImage(s);
 
     addView(fw, QString("fviewer"));

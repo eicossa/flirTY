@@ -92,7 +92,7 @@ flirImgFrame::flirImgFrame(const QString &name, flirImg *fimg, QWidget *parent)
     label = new QLabel(name);
     layoutEverything();
 
-    setupSlots();
+    connectEverything();
     setupMatrix();
 
     qDebug() << "flirImgFrame : flirImgFrame() constructor done";
@@ -321,7 +321,7 @@ void flirImgFrame::setupProcessingModes()
     processingModeGroup->addButton(pointSelectButton);
 }
 
-void flirImgFrame::setupSlots()
+void flirImgFrame::connectEverything()
 {
     connect(resetButton,        SIGNAL(clicked()),         this, SLOT(resetView()));
     connect(zoomSlider,         SIGNAL(valueChanged(int)), this, SLOT(setupMatrix()));

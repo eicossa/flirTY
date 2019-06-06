@@ -12,7 +12,7 @@ void imgOperatorWindows::buildShitForThisImgpath(QString imgPath)
 {
     buildFlirImgObjAndSegmentorObj(imgPath);
 
-    fW->readImage(fimg);
+    fW->initFlirImgWindow(fimg);
     sW->readImage(segmentor);
 
     connectEverything();

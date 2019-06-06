@@ -15,11 +15,11 @@ flirImgWindow::flirImgWindow(QWidget *parent)
 }
 
 #include <QFileDialog>
-void flirImgWindow::readImage(flirImg* flirImgObject)
+void flirImgWindow::initFlirImgWindow(flirImg* flirImgObject)
 {
     this->fimg  = flirImgObject;
 
-    mainImg     = new flirImgFrame("Left view", fimg);
+    mainImgFrame     = new flirImgFrame("Left view", fimg);
 
     // qDebug() << " flirbabaWindow::readImage() -- created a new imgFrame";
     setupWindow();
@@ -28,17 +28,16 @@ void flirImgWindow::readImage(flirImg* flirImgObject)
 
 void flirImgWindow::connectEverything()
 {
-    connect(mainImg, SIGNAL(leafButtonStatus(bool)),
+    connect(mainImgFrame, SIGNAL(leafButtonStatus(bool)),
             this,    SLOT(emitLeafButtonSignal(bool)));
-
-    connect(mainImg, SIGNAL(blobAvgTempBataaoIsPointKa(QPoint)),
-            this,    SLOT(emitBlobBataaoIsPointKaSignal(QPoint)));
-    connect(mainImg, SIGNAL(blobIDBataaoIsPointKa(QPoint)),
+    connect(mainImgFrame, SIGNAL(blobIDBataaoIsPointKa(QPoint)),
             this,    SLOT(emitBlobIDBataaoIsPointKaSignal(QPoint)));
 
 
     connect(this,    SIGNAL(blobAvgTempLeleMadarchod(double)),
-            mainImg, SLOT(updateBlobAvgTemp(double)));
+            mainImgFrame, SLOT(updateBlobAvgTemp(double)));
+    connect(mainImgFrame, SIGNAL(blobAvgTempBataaoIsPointKa(QPoint)),
+            this,    SLOT(emitBlobBataaoIsPointKaSignal(QPoint)));
 }
 
 void flirImgWindow::setupWindow()
@@ -51,7 +50,7 @@ void flirImgWindow::setupWindow()
     hSplitter->addWidget(v1Splitter);
     hSplitter->addWidget(v2Splitter);
 
-    v1Splitter->addWidget(mainImg);
+    v1Splitter->addWidget(mainImgFrame);
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(hSplitter);
@@ -68,10 +67,10 @@ void flirImgWindow::setupScene()
 
 void flirImgWindow::updateOverlaidImage(cv::Mat overlay)
 {
-    mainImg->updateWithOverlay(overlay);
+    mainImgFrame->updateWithOverlay(overlay);
 }
 
 void flirImgWindow::restoreOriginalImage()
 {
-    mainImg->restoreOriginalImage();
+    mainImgFrame->restoreOriginalImage();
 }
