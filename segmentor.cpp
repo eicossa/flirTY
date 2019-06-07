@@ -7,7 +7,11 @@ Segmentor::Segmentor()
     numOfBlobs        = 0;
     minArea           = -1;
     maxArea           = -1;
+<<<<<<< HEAD
     blobIDcolors            = std::vector<Vec3b>();
+=======
+    colors            = std::vector<Vec3b>();
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
     blobAreas         = std::vector<int>();
     sortedBlobAreas   = std::vector<int>();
     selectedBlobAreas = std::vector<int>();
@@ -15,6 +19,7 @@ Segmentor::Segmentor()
     blobPoints        = std::vector<std::vector<Point2i>>();
 }
 
+<<<<<<< HEAD
 void Segmentor::loadDisplayRAWsImage(flirImg* fimg, int flags)
 {
   using namespace std;
@@ -23,6 +28,14 @@ void Segmentor::loadDisplayRAWsImage(flirImg* fimg, int flags)
   src = imread(fimg->getDisplayRAWsImgpath(), flags);
   qDebug()  << " Segmentor::loadDisplayRAWsImage - Type of image read in : "
             << src.type();
+=======
+void Segmentor::loadThermalImage(std::string imgpath, int flags)
+{
+  using namespace std;
+  src = imread(imgpath, flags);
+  std::cout << " Type of image read in : "
+            << src.type() << endl;
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 
   sParams = new SegmentorParams();
 }
@@ -151,14 +164,22 @@ void Segmentor::watershedImage()
 
 void Segmentor::generateRandomColors()
 {
+<<<<<<< HEAD
     blobIDcolors.clear();
+=======
+    colors.clear();
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 
     for (size_t i = 0; i < contourSize; i++){
       int b = theRNG().uniform(0, 200);
       int g = theRNG().uniform(0, 200);
       int r = theRNG().uniform(0, 200);
       Vec3b rc((uchar)b, (uchar)g, (uchar)r);
+<<<<<<< HEAD
       blobIDcolors.push_back(rc);
+=======
+      colors.push_back(rc);
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
     }
 }
 
@@ -173,6 +194,7 @@ void Segmentor::initializeBlobAreasBlobPoints()
     }
 }
 
+<<<<<<< HEAD
 #include <map>
 void Segmentor::fillRandomColors()
 {
@@ -192,6 +214,22 @@ void Segmentor::fillRandomColors()
             }
             else{
                 segmentedColoredMat.at<Vec3b>(rowNum,colNum) = Vec3b(255,255,255);
+=======
+void Segmentor::fillRandomColors()
+{
+    // Fill labeled objects with random colors
+    for (int i = 0; i < markers.rows; i++){
+        for (int j = 0; j < markers.cols; j++){
+            int index = markers.at<int>(i,j);
+            if (index > 0 && index <= static_cast<int>(contourSize)){
+                final.at<Vec3b>(i,j) = colors[index-1];
+                blobAreas.at(index-1)+= 1;
+                blobPoints.at(index-1).push_back(Point2i(i,j));
+                // blobArea[colors[index-1]]+=1;
+            }
+            else{
+                final.at<Vec3b>(i,j) = Vec3b(255,255,255);
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
             }
         }
     }
@@ -203,7 +241,11 @@ void Segmentor::fillRandomColors()
 void Segmentor::colorizeImageSegments()
 {
   using namespace std;
+<<<<<<< HEAD
   segmentedColoredMat    = Mat::zeros(markers.size(), CV_8UC3);
+=======
+  final = Mat::zeros(markers.size(), CV_8UC3);
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
   Mat mark = Mat::zeros(markers.size(), CV_8UC1);
   markers.convertTo(mark, CV_8UC1);
   bitwise_not(mark, mark);
@@ -216,7 +258,11 @@ void Segmentor::colorizeImageSegments()
   fillRandomColors();
   generateSortedBlobAreas();
 
+<<<<<<< HEAD
   selected = segmentedColoredMat.clone();
+=======
+  selected = final.clone();
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 
 
   // for (size_t i = 0; i < contourSize; i++){
@@ -242,7 +288,11 @@ void Segmentor::colorizeImageSegments()
 
 void Segmentor::generateSelectedBlobIndices()
 {
+<<<<<<< HEAD
     // qDebug() << " Segmentor : updateWithSelectedBlobAreas() -- begun";
+=======
+    qDebug() << " Segmentor : updateWithSelectedBlobAreas() -- begun";
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
     selectedBlobIndices.clear();
 
     std::vector<int>::iterator it;
@@ -251,8 +301,12 @@ void Segmentor::generateSelectedBlobIndices()
     for(int sArea : selectedBlobAreas){
         it = std::find(blobAreas.begin(), blobAreas.end(), sArea);
         if(it != blobAreas.end()){
+<<<<<<< HEAD
             // qDebug() << " Segmentor : generateSelectedBlobIndices : (Area, Index) : "
             //          << sArea << " - " << it - blobAreas.begin();
+=======
+            qDebug() << " (Area, Index) : " << sArea << " - " << it - blobAreas.begin();
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
             selectedBlobIndices.push_back(it - blobAreas.begin());
         }
     }
@@ -265,7 +319,11 @@ void Segmentor::fillSelectedAreasRandomColors()
         for (int j = 0; j < markers.cols; j++){
             int index = markers.at<int>(i,j);
             if(std::find(selectedBlobIndices.begin(), selectedBlobIndices.end(), (index-1)) != selectedBlobIndices.end()){
+<<<<<<< HEAD
                 selected.at<Vec3b>(i,j) = blobIDcolors[index-1];
+=======
+                selected.at<Vec3b>(i,j) = colors[index-1];
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
                 // blobArea[colors[index-1]]+=1;
             }
             else{
@@ -281,7 +339,11 @@ void Segmentor::fillSelectedAreasRandomColors()
 
 
 
+<<<<<<< HEAD
 std::vector<Vec3b>                Segmentor::getColors()     { return blobIDcolors;     }
+=======
+std::vector<Vec3b>                Segmentor::getColors()     { return colors;     }
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 std::vector<int>                  Segmentor::getBlobAreas()  { return blobAreas;  }
 std::vector<int>            Segmentor::getSortedBlobAreas()  { return sortedBlobAreas; }
 std::vector<int>            Segmentor::getSelectedBlobAreas(){ return selectedBlobAreas; }
@@ -297,7 +359,11 @@ int compare (const void * a, const void * b)
 
 void Segmentor::generateSortedBlobAreas()
 {
+<<<<<<< HEAD
     // qDebug() << "Segmentor : generateSortedBlobAreas() -- begun";
+=======
+    qDebug() << "Segmentor : generateSortedBlobAreas() -- begun";
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
     sortedBlobAreas.clear();
 
     std::vector<int>areasV = getBlobAreas();
@@ -311,13 +377,22 @@ void Segmentor::generateSortedBlobAreas()
     for(int x : areasA){
         sortedBlobAreas.push_back(x);
     }
+<<<<<<< HEAD
     // qDebug() << "Segmentor : generateSortedBlobAreas() -- fini";
+=======
+    qDebug() << "Segmentor : generateSortedBlobAreas() -- fini";
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 }
 
 void Segmentor::generateSelectedBlobAreas(int min, int max)
 {
+<<<<<<< HEAD
     // qDebug() << "Segmentor : generateSelectedBlobAreas() with "
     //         << min << " and " << max;
+=======
+    qDebug() << "Segmentor : generateSelectedBlobAreas() with "
+             << min << " and " << max;
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
     selectedBlobAreas.clear();
     std::vector<int> areasS = getSortedBlobAreas();
     int areasSA[areasS.size()];
@@ -326,6 +401,7 @@ void Segmentor::generateSelectedBlobAreas(int min, int max)
 
     for(int index=min; index <= max; index++){
         selectedBlobAreas.push_back(areasSA[index]);
+<<<<<<< HEAD
         // qDebug() << " .... Selected Area : " << areasSA[index];
     }
 
@@ -409,23 +485,80 @@ QString Segmentor::getStatusString(QPoint imgPos)
                            + " : Blob temp "
                            + QString::number(blobAvgTemp);
     return statusString;
+=======
+        qDebug() << " .... Selected Area : " << areasSA[index];
+    }
+
+    qDebug() << "Segmentor : generateSelectedBlobAreas() done";
+}
+
+std::vector<Point2i> Segmentor::getIsPointKaBlob(QPointF p)
+{
+    std::cout << " Trying to get this point ka blob "
+              << p.x() << ", " << p.y();
+    Point2i pippi(p.y(), p.x());
+
+    std::vector<Point2i>::iterator it;
+    std::vector<Point2i>           pvec;
+
+    int THEBLOBID=0;
+    int blob_id = 0;
+    for (blob_id = 0; blob_id < contourSize; blob_id++){
+      pvec = blobPoints.at(blob_id);
+      it = std::find(pvec.begin(), pvec.end(), pippi);
+      if (it != pvec.end()){
+          std::cout << "Blob " << blob_id;
+          THEBLOBID = blob_id;
+          // std::cout << "  Element " << pippi << " found in blob : " << blob_id << std::endl;
+          // std:: cout << it - pvec.begin() + 1 << "\n" ;
+      }
+      else{
+          // std::cout << "Element not found.\n\n";
+      }
+      // blobAreas.push_back(0);
+      // Point2i nopoint(-1, -1);
+      //
+      // blobpointvec.push_back(nopoint);
+      // blobPoints.push_back(blobpointvec);
+    }
+
+
+    // std::find function call
+
+    std::cout << " Returning blob id "
+              << THEBLOBID << "/"
+              << contourSize
+              << " | " << std::endl;
+    return blobPoints.at(THEBLOBID);
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 }
 
 
 void Segmentor::segmentImage()
 {
   changeBackgroundImage();   emit signalSegmentorProgress(10);
+<<<<<<< HEAD
   // qDebug() << " Segmentor : segmentImage() - Background done ";
+=======
+  qDebug() << " Segmentor : segmentImage() - Background done ";
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
   filterImage();             emit signalSegmentorProgress(20);
   morphologizeImage();       emit signalSegmentorProgress(30);
   binarizeImage();           emit signalSegmentorProgress(40);
   distanceTransformImage();  emit signalSegmentorProgress(50);
   obtainPeaksImage();        emit signalSegmentorProgress(60);
   watershedImage();          emit signalSegmentorProgress(70);
+<<<<<<< HEAD
   // qDebug() << " Segmentor : segmentImage() - Watershedding done";
   colorizeImageSegments();   emit signalSegmentorProgress(100);
   updateWithSelectedBlobAreas(0, numOfBlobs - 1);
   // qDebug() << " Segmentor : segmentImage() - Colorization done";
+=======
+  qDebug() << " Segmentor : segmentImage() - Watershedding done";
+  colorizeImageSegments();   emit signalSegmentorProgress(100);
+  updateWithSelectedBlobAreas(0, numOfBlobs - 1);
+  qDebug() << " Segmentor : segmentImage() - Colorization done";
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 
   // calculateBlobAreas();
 }
@@ -438,5 +571,9 @@ void Segmentor::updateWithSelectedBlobAreas(int min, int max)
     generateSelectedBlobIndices();
     fillSelectedAreasRandomColors();
 
+<<<<<<< HEAD
     // qDebug() << " Segmentor : updateWithSelectedBlobAreas() -- fini";
+=======
+    qDebug() << " Segmentor : updateWithSelectedBlobAreas() -- fini";
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 }

@@ -1,0 +1,14 @@
+#include "tfgstabbedwindow.h"
+#include "ui_tfgsmainwindow.h"
+
+tfgsTabbedWindow::tfgsTabbedWindow(QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::tfgsMainWindow)
+{
+    ui->setupUi(this);
+}
+
+tfgsTabbedWindow::~tfgsTabbedWindow()
+{
+    delete ui;
+}

@@ -25,6 +25,7 @@ class flirImg : public QObject
 signals:
   void signalFlirImgProgress(int);
 private:
+<<<<<<< HEAD
   int printCounter;
   QMap<QString, QString> flirTagsMap;
   flirImgMetadata*    fmd;
@@ -135,6 +136,45 @@ public:
   void    writePrereadMetadata();
 
   void    createOrderedRAWsMat();
+=======
+  flirImgMetadata*    fmd;
+  ErrMsgs*            emsgs;
+  std::string         imgpath;
+  std::string         binary_imgpath;
+  std::string         thermal_imgpath;
+  std::string         repaletted_imgpath;
+  Mat                 thermimg;
+  Mat                 temperatures;
+  void  temperatureCallBackFunc(int, int, int, int, void*);
+  void changeBackgroundImage(Mat&);
+  void filterImage(Mat, Mat&);
+  void binarizeImage(Mat&);
+  void distanceTransformImage(Mat, Mat&);
+  void obtainPeaksImage(Mat&);
+  void generateWatershedMarkers(Mat, Mat&, int&);
+  void generateFinalResultImage(int, Mat, Mat&);
+public:
+  flirImg();
+  void loadOrigImage(std::string fimgpath);
+  void printImageSummary();
+  flirImgMetadata* getMetadata(){return this->fmd;}
+  void loadRAWThermalImage();
+  void extractThermalRaw();
+  void displayTooltippedImage();
+
+  void   calcTempForEveryPixel();
+  double calcBlobAvgTemp(std::vector<Point2i>);
+
+  void   segmentImage();
+  Mat    getPixelTemperatures(){return temperatures;}
+  double getPixelTemperature(int x, int y);
+  std::string getImgPath()        { return imgpath; }
+  std::string getBinaryImgPath()  { return binary_imgpath; }
+  std::string getThermalImgPath() { return thermal_imgpath; }
+  std::string getRepalettedImgPath() { return repaletted_imgpath; }
+  Mat    getThermalImgMat(){return thermimg;}
+  bool didThermalConversionSucceed();
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 };
 
 #endif // FLIRIMG_H

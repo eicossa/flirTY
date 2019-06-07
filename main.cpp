@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #include "ui/tgfstabbedwindow.h"
+=======
+#include "tgfstabbedwindow.h"
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 #include <QObject>
 #include <QWidget>
 #include <QApplication>
@@ -6,6 +10,7 @@
 #include <QToolBar>
 #include <QAction>
 #include <QMenuBar>
+<<<<<<< HEAD
 #include "ui/tgfsmainwindow.h"
 #include <QThread>
 
@@ -57,6 +62,15 @@
 void oneImageAtATime(tgfsTabbedWindow &w)
 {
     flirImgWindow *fW = new flirImgWindow();
+=======
+#include "tgfsmainwindow.h"
+#include <QThread>
+
+
+void oneImageAtATime(tgfsTabbedWindow &w)
+{
+    flirbabaWindow *fW = new flirbabaWindow();
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
     segmentorWindow *sW = new segmentorWindow();
 
     w.addView(fW, QString("Flirbaba Viewer"));
@@ -67,11 +81,19 @@ void oneImageAtATime(tgfsTabbedWindow &w)
     w.connectEverythingForOneImage();
 }
 
+<<<<<<< HEAD
 //void multipleImagesAtATime(tgfsTabbedWindow &w)
 //{
 //    w.load5Images();
 //    w.connectEverythingFor5Images();
 //}
+=======
+void multipleImagesAtATime(tgfsTabbedWindow &w)
+{
+    w.load5Images();
+    w.connectEverythingFor5Images();
+}
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
 
 int main(int argc, char *argv[])
 {
@@ -85,7 +107,10 @@ int main(int argc, char *argv[])
 
     w.showMaximized();
 
+<<<<<<< HEAD
     //testOnlyFlirImg();
 
+=======
+>>>>>>> ae9bc093c8864ebd3392746a0ea24e22d6c9cbd3
     return a.exec();
 }
