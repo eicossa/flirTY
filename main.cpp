@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 
     w.showMaximized();
 
-    testOnlyFlirImg();
+    //testOnlyFlirImg();
 
     return a.exec();
 }

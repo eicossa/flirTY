@@ -15,11 +15,12 @@ Segmentor::Segmentor()
     blobPoints        = std::vector<std::vector<Point2i>>();
 }
 
-void Segmentor::loadDisplayRAWsImage(std::string displayRAWs_imgpath, int flags)
+void Segmentor::loadDisplayRAWsImage(flirImg* fimg, int flags)
 {
   using namespace std;
+  this->fimg = fimg;
   qDebug()  << " Segmentor::loadDisplayRAWsImage - About to do it";
-  src = imread(displayRAWs_imgpath, flags);
+  src = imread(fimg->getDisplayRAWsImgpath(), flags);
   qDebug()  << " Segmentor::loadDisplayRAWsImage - Type of image read in : "
             << src.type();
 
@@ -184,7 +185,7 @@ void Segmentor::fillRandomColors()
                 blobID  = index - 1;
                 segmentedColoredMat.at<Vec3b>(rowNum,colNum) = blobIDcolors[blobID];
                 blobAreas.at(index-1)+= 1;
-                Point2i p(colNum, rowNum);
+                Point2i p(rowNum, colNum);
                 blobPoints.at(index-1).push_back(p);
 
                 // blobArea[colors[index-1]]+=1;
@@ -331,23 +332,83 @@ void Segmentor::generateSelectedBlobAreas(int min, int max)
     // qDebug() << "Segmentor : generateSelectedBlobAreas() done";
 }
 
-std::vector<Point2i> Segmentor::getIsPointKaBlob(QPoint p)
+int Segmentor::getIsPointKaBlobID(QPoint p)
 {
-    std::cout << " Segmentor::getIsPointKaBlob - Trying to get this point ka blob "
-              << p.x() << ", " << p.y();
+
 
     int index  = markers.at<int>(p.y(), p.x());
     int blobID = index - 1;
+    qDebug() << QString(" Segmentor::getIsPointKaBlob(%1, %2) - %3").arg(p.x()).arg(p.y()).arg(blobID);
+    return blobID;
+}
 
 
+int Segmentor::getIsPointKaBlobArea(QPoint p)
+{
+    int blobID = getIsPointKaBlobID(p);
+    int blobArea;
+    try{
+        blobArea = blobPoints.at(blobID).size();
+    }
+    catch(std::exception e){
+        qDebug() << e.what();
+    }
+    return blobArea;
+}
 
-    // std::find function call
+std::vector<Point2i> Segmentor::getIsPointKeBlobKePoints(QPoint p)
+{
+    int blobID = getIsPointKaBlobID(p);
+    std::vector<Point2i> pointsOfASingleBlob;
+    try{
+        pointsOfASingleBlob = blobPoints.at(blobID);
+        qDebug() << "Size of points returned " << pointsOfASingleBlob.size();
+    }
+    catch(std::exception e){
+        qDebug() << e.what();
+    }
+    return pointsOfASingleBlob;
+}
 
-    std::cout << " Segmentor::getIsPointKaBlob -- Returning blob id "
-              << blobID << "/"
-              << contourSize
-              << " | " << std::endl;
-    return blobPoints.at(blobID);
+double Segmentor::getIsPointKeBlobKaAvgTemp(QPoint p)
+{
+    return fimg->calcBlobAvgTemp(getIsPointKeBlobKePoints(p));
+
+    //    // qDebug() << " tgfsTabbedWindow::isPointKeBlobKaTempNikaaloMadarchod(QPointF p) - Inside madarchod blob nikaalo " << p.x() << ", " << p.y();
+    //    std::vector<Point2i> pts;
+    //    pts = segmentor->getIsPointKaBlob(p);
+    //    std::cout << " Num of points in this blob " << pts.size() << std::endl;
+    //    double avgBlobTemp;
+    //    avgBlobTemp = fimg->calcBlobAvgTemp(pts);
+    //    emit blobAvgTempLeleBhosdike(avgBlobTemp);
+    //    // std::cout << "Avg blob Temp " << avgBlobTemp << endl;
+    //    // std::cout << "Blob num " << blobNum << std::endl;
+}
+
+
+QString Segmentor::getStatusString(QPoint imgPos)
+{
+    int colNum = imgPos.x();
+    int rowNum = imgPos.y();
+
+    int    blobID      = getIsPointKaBlobID(imgPos);
+    int    blobArea    = getIsPointKaBlobArea(imgPos);
+    double blobAvgTemp = getIsPointKeBlobKaAvgTemp(imgPos);
+
+    // this should cause a chain of signals/slots to update
+    // the blob avg temparature of this place
+    QString statusString = QString::number(colNum)
+                           + ", "
+                           + QString::number(rowNum)
+                           + " : Blob ID - "
+                           + QString::number(blobID)
+                           + " : Num of Blobs - "
+                           + QString::number(numOfBlobs)
+                           + " : Blob Area - "
+                           + QString::number(blobArea)
+                           + " : Blob temp "
+                           + QString::number(blobAvgTemp);
+    return statusString;
 }
 
 

@@ -215,16 +215,18 @@ bool flirImg::didDisplayRAWsConversionSucceed()
 
 double flirImg::calcBlobAvgTemp(std::vector<Point2i> blobPts)
 {
+    //qDebug() << "flirImg::calcBlobAvgTemp with " << blobPts.size();
     double avgBlobTemp    = 0.0;
     double sumOfBlobTemps = 0.0;
     for(int i = 0; i < blobPts.size(); i++){
         Point2i pt = blobPts.at(i);
-        int y = pt.y;
-        int x = pt.x;
-        if(x!=-1 && y!=-1)
-          sumOfBlobTemps += temperatures.at<double>(x, y);
+        int col = pt.y;
+        int row = pt.x;
+        if(row!=-1 && col!=-1){
+            sumOfBlobTemps += getPixelTemperature(row, col);
+        }
     }
-    int numOfPoints = blobPts.size();
+    double numOfPoints = (double)blobPts.size();
     avgBlobTemp = sumOfBlobTemps/numOfPoints;
     return avgBlobTemp;
 }
@@ -233,8 +235,8 @@ QString flirImg::getStatusString(int rowNum, int colNum)
 {
     QString rowString           = QString::number(rowNum).leftJustified(4);
     QString colString           = QString::number(colNum).leftJustified(4);
-    QString orderedRAWvalString = QString::number(orderedRAWsMat.at<unsigned short>(rowNum, rowNum));
-    QString tempString          = QString::number(temperatures.at<double>(rowNum, rowNum));
+    QString orderedRAWvalString = QString::number(orderedRAWsMat.at<unsigned short>(rowNum, colNum));
+    QString tempString          = QString::number(temperatures.at<double>(rowNum, colNum));
 
     QString statusString = rowString
                            + ", "

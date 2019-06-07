@@ -97,15 +97,15 @@ void tgfsTabbedWindow::setupMenubars()
 
 void tgfsTabbedWindow::isPointKeBlobKaTempNikaaloMadarchod(QPoint p)
 {
-    // qDebug() << " tgfsTabbedWindow::isPointKeBlobKaTempNikaaloMadarchod(QPointF p) - Inside madarchod blob nikaalo " << p.x() << ", " << p.y();
-    std::vector<Point2i> pts;
-    pts = segmentor->getIsPointKaBlob(p);
-    std::cout << " Num of points in this blob " << pts.size() << std::endl;
-    double avgBlobTemp;
-    avgBlobTemp = fimg->calcBlobAvgTemp(pts);
-    emit blobAvgTempLeleBhosdike(avgBlobTemp);
-    // std::cout << "Avg blob Temp " << avgBlobTemp << endl;
-    // std::cout << "Blob num " << blobNum << std::endl;
+//    // qDebug() << " tgfsTabbedWindow::isPointKeBlobKaTempNikaaloMadarchod(QPointF p) - Inside madarchod blob nikaalo " << p.x() << ", " << p.y();
+//    std::vector<Point2i> pts;
+//    pts = segmentor->getIsPointKaBlob(p);
+//    std::cout << " Num of points in this blob " << pts.size() << std::endl;
+//    double avgBlobTemp;
+//    avgBlobTemp = fimg->calcBlobAvgTemp(pts);
+//    emit blobAvgTempLeleBhosdike(avgBlobTemp);
+//    // std::cout << "Avg blob Temp " << avgBlobTemp << endl;
+//    // std::cout << "Blob num " << blobNum << std::endl;
 }
 
 
@@ -140,10 +140,10 @@ void tgfsTabbedWindow::loadDefaultImage()
 
 void tgfsTabbedWindow::makeEverythingHappenANewWay(QString imgPath)
 {
-    imgOperatorWindows* iOW;
+//    imgOperatorWindows* iOW;
 
-    iOW = new imgOperatorWindows();
-    iOW->buildShitForThisImgpath(imgPath);
+//    iOW = new imgOperatorWindows();
+//    iOW->buildShitForThisImgpath(imgPath);
 }
 
 void tgfsTabbedWindow::makeEverythingHappenWithOneImageAtATime(QString imgPath)
@@ -162,7 +162,7 @@ void tgfsTabbedWindow::makeEverythingHappenWithOneImageAtATime(QString imgPath)
     sW = new segmentorWindow();
 
     fW->initFlirImgWindow(fimg, segmentor);
-    sW->readImage(segmentor);
+    sW->initSegmentorWindow(segmentor);
 
     addView(fW, QString("Flirbaba Viewer"));
     addView(sW, QString("Segmentor"));
@@ -176,13 +176,13 @@ void tgfsTabbedWindow::buildFlirImgObjAndSegmentorObj(QString imgPath)
 {
     fimg->processImage(imgPath.toStdString());
 
-    qDebug() << " tgfsTabbedWindow  : buildSegmentorObj() - Beginning with the segmentor object ";
+    // qDebug() << " tgfsTabbedWindow  : buildSegmentorObj() - Beginning with the segmentor object ";
     std::string displayRAWs_imgpath = fimg->getDisplayRAWsImgpath();
-    qDebug() << " tgfsTabbedWindow  : buildSegmentorObj() - About to build new segmentor object ";
-    segmentor->loadDisplayRAWsImage(displayRAWs_imgpath, cv::IMREAD_COLOR);
-    qDebug() << " tgfsTabbed Window : buildSegmentorObj() - About to segment it ";
+    // qDebug() << " tgfsTabbedWindow  : buildSegmentorObj() - About to build new segmentor object ";
+    segmentor->loadDisplayRAWsImage(fimg, cv::IMREAD_COLOR);
+    // qDebug() << " tgfsTabbed Window : buildSegmentorObj() - About to segment it ";
     segmentor->segmentImage();
-    qDebug() << " tgfsTabbed Window : buildSegmentorObj() - Done ";
+    // qDebug() << " tgfsTabbed Window : buildSegmentorObj() - Done ";
 }
 
 
@@ -206,10 +206,10 @@ void tgfsTabbedWindow::connectEverythingForOneImage()
 
     connect(fW,                                      SIGNAL(leafDetectButtonToggled(bool)),
             this,                                    SLOT(displayOverlaidImageForOneImage(bool)));
-    connect(fW,                                      SIGNAL(plssBlobBataaoIsPointKa(QPoint2i)),
-            this,                                    SLOT(isPointKeBlobKaTempNikaaloMadarchod(QPoint2i)));
-    connect(this,                                    SIGNAL(blobAvgTempLeleBhosdike(double)),
-            fW,                                      SLOT(emitBlobAvgTempMilaBhosadiwaale(double)));
+//    connect(fW,                                      SIGNAL(plssBlobBataaoIsPointKa(QPoint2i)),
+//            this,                                    SLOT(isPointKeBlobKaTempNikaaloMadarchod(QPoint2i)));
+//    connect(this,                                    SIGNAL(blobAvgTempLeleBhosdike(double)),
+//            fW,                                      SLOT(emitBlobAvgTempMilaBhosadiwaale(double)));
 }
 
 void tgfsTabbedWindow::displayOverlaidImageForOneImage(bool y)
@@ -251,7 +251,7 @@ void tgfsTabbedWindow::addAnotherFlirImgAndSegmentorObj(QString imgPath)
     Segmentor *s = segmentors.at(numOfImagesDisplayed);
 
     f->processImage(imgPath.toStdString());
-    s->loadDisplayRAWsImage(f->getDisplayRAWsImgpath(), cv::IMREAD_COLOR);
+    s->loadDisplayRAWsImage(f, cv::IMREAD_COLOR);
     s->segmentImage();
 
     flirImgMetadata *fmd;
@@ -266,8 +266,8 @@ void tgfsTabbedWindow::addAnotherFlirImgAndSegmentorObj(QString imgPath)
     flirImgWindow *fw  = fWindows.at(numOfImagesDisplayed);
     segmentorWindow *sw = sWindows.at(numOfImagesDisplayed);
 
-    fw->initFlirImgWindow(f);
-    sw->readImage(s);
+    fw->initFlirImgWindow(f,s);
+    sw->initSegmentorWindow(s);
 
     addView(fw, QString("fviewer"));
     addView(sw, QString("sviewer"));

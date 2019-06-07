@@ -6,6 +6,7 @@
 #include <QLCDNumber>
 #include <QGraphicsPixmapItem>
 #include "flirimg.h"
+#include "segmentor.h"
 
 class QLabel;
 class QSlider;
@@ -42,9 +43,9 @@ class flirImgFrame : public QFrame
     Q_OBJECT
 signals:
     void leafButtonStatus(bool);
-    void blobAvgTempBataaoIsPointKa(QPoint imgPos);
+//    void blobAvgTempBataaoIsPointKa(QPoint imgPos);
     void blobIDBataaoIsPointKa(QPoint imgPos);
-    void blobAreaBataaoIsPointKa(QPoint imgPos);
+//    void blobAreaBataaoIsPointKa(QPoint imgPos);
 public slots:
     void zoomIn(int level = 1);
     void zoomOut(int level = 1);
@@ -64,7 +65,9 @@ private slots:
     void rotateRight();
     void updateStatusBar();
 public:
-    explicit flirImgFrame(const QString &name, flirImg *fimg, QWidget *parent = 0);
+    explicit flirImgFrame(const QString &name,
+                          flirImg *fimg, Segmentor *segmentor,
+                          QWidget *parent = 0);
     void     setFlirImg(flirImg *fimg);
     void     setImg(QImage *img);
     QGraphicsView *view() const;
@@ -92,6 +95,7 @@ private:
 
     flirImgDisplayerGraphicsView *flirImgDisplayer;
     flirImg                      *fimg;
+    Segmentor                    *segmentor;
     QImage                       *img;
     int                           imgWidth, imgHeight;
     double                        mousedOverBlobAvgTemp;
@@ -102,6 +106,8 @@ private:
 
     QLabel                       *label;
     QLabel                       *label2;
+    QLabel *lcdDisplay1Label;
+    QLabel *lcdDisplay2Label;
 
     void                          setupViewingModes();
     QToolButton                  *rawImageViewButton;
@@ -115,7 +121,7 @@ private:
 
     QToolButton *resetButton;
 
-    void        setupSlots();
+    void        connectEverything();
 
     QSize       *iconSize;
 
@@ -142,8 +148,8 @@ private:
 
 
     QStatusBar *statusBar;
-    QLCDNumber          *display1_rawSensorValue;
-    QLCDNumber          *display3_Rtemps;
+    QLCDNumber          *lcdDisplay1;
+    QLCDNumber          *lcdDisplay2;
 
 
     QGraphicsPixmapItem basePixmap, overlayPixmap;

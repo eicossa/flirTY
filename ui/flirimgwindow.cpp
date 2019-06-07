@@ -3,6 +3,7 @@
 #include "flirimgwindow.h"
 #include "flirimgframe.h"
 #include "flirimg.h"
+#include "segmentor.h"
 
 #include <QMessageBox>
 
@@ -15,11 +16,12 @@ flirImgWindow::flirImgWindow(QWidget *parent)
 }
 
 #include <QFileDialog>
-void flirImgWindow::initFlirImgWindow(flirImg* flirImgObject)
+void flirImgWindow::initFlirImgWindow(flirImg* flirImgObject, Segmentor* segmentorObject)
 {
-    this->fimg  = flirImgObject;
+    this->fimg      = flirImgObject;
+    this->segmentor = segmentorObject;
 
-    mainImgFrame     = new flirImgFrame("Left view", fimg);
+    mainImgFrame     = new flirImgFrame("Left view", fimg, segmentor);
 
     // qDebug() << " flirbabaWindow::readImage() -- created a new imgFrame";
     setupWindow();
@@ -29,15 +31,15 @@ void flirImgWindow::initFlirImgWindow(flirImg* flirImgObject)
 void flirImgWindow::connectEverything()
 {
     connect(mainImgFrame, SIGNAL(leafButtonStatus(bool)),
-            this,    SLOT(emitLeafButtonSignal(bool)));
-    connect(mainImgFrame, SIGNAL(blobIDBataaoIsPointKa(QPoint)),
-            this,    SLOT(emitBlobIDBataaoIsPointKaSignal(QPoint)));
+            this,         SLOT(emitLeafButtonSignal(bool)));
+//    connect(mainImgFrame, SIGNAL(blobIDBataaoIsPointKa(QPoint)),
+//            this,         SLOT(emitBlobIDBataaoIsPointKaSignal(QPoint)));
 
 
-    connect(this,    SIGNAL(blobAvgTempLeleMadarchod(double)),
-            mainImgFrame, SLOT(updateBlobAvgTemp(double)));
-    connect(mainImgFrame, SIGNAL(blobAvgTempBataaoIsPointKa(QPoint)),
-            this,    SLOT(emitBlobBataaoIsPointKaSignal(QPoint)));
+//    connect(this,    SIGNAL(blobAvgTempLeleMadarchod(double)),
+//            mainImgFrame, SLOT(updateBlobAvgTemp(double)));
+//    connect(mainImgFrame, SIGNAL(blobAvgTempBataaoIsPointKa(QPoint)),
+//            this,    SLOT(emitBlobBataaoIsPointKaSignal(QPoint)));
 }
 
 void flirImgWindow::setupWindow()

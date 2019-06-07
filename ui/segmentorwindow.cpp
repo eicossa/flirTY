@@ -23,7 +23,7 @@ segmentorWindow::segmentorWindow(QWidget *parent) :
     // qDebug() << "segmentorWindow : segmentorWindow() -- Constructor called";
 }
 
-void segmentorWindow::readImage(Segmentor *s)
+void segmentorWindow::initSegmentorWindow(Segmentor *s)
 {
     this->segmentor  = s;
     updateSegmentorObjDetails();

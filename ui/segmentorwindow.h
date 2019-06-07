@@ -35,7 +35,7 @@ private slots:
 //    void           dontLetMaxBlobAreaSliderCrossMinBlobAreaSlider(int);
 public:
     explicit       segmentorWindow(QWidget *parent = 0);
-    void           readImage(Segmentor* segmentor);
+    void           initSegmentorWindow(Segmentor* segmentor);
     ~segmentorWindow();
     cv::Mat        getOverlayImage();
     void           createAllImgFrames();
@@ -61,7 +61,7 @@ private:
 
     QButtonGroup   *operatorButtonGroup, *kernelButtonGroup;
 
-    void           readImage();
+    void           initSegmentorWindow();
     void           createMorphologyDock();
     void           createBlobSliderDock();
     void           createBinaryThresholdingDock();

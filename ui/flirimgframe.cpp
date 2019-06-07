@@ -3,6 +3,7 @@
 //#else
 #include <QtWidgets>
 #include "flirimgframe.h"
+
 //#endif
 #include <qmath.h>
 
@@ -66,7 +67,7 @@ void flirImgDisplayerGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     // and QRect::contains().
 }
 
-flirImgFrame::flirImgFrame(const QString &name, flirImg *fimg, QWidget *parent)
+flirImgFrame::flirImgFrame(const QString &name, flirImg *fimg, Segmentor *segmentor, QWidget *parent)
     : QFrame(parent)
 {
     qDebug() << "flirImgFrame : flirImgFrame() constructor begun";
@@ -75,6 +76,7 @@ flirImgFrame::flirImgFrame(const QString &name, flirImg *fimg, QWidget *parent)
     isLeafDetectionMode = false;
 
     this->fimg      = fimg;
+    this->segmentor = segmentor;
     this->imgWidth  = fimg->getRAWThermalImageWidth();
     this->imgHeight = fimg->getRAWThermalImageHeight();
 
@@ -111,21 +113,23 @@ void flirImgFrame::layoutEverything()
     statusBar = new QStatusBar;
     statusBar->setStatusTip(tr("This is the status bar"));
 
-    display1_rawSensorValue = new QLCDNumber();
-    display1_rawSensorValue->setDigitCount(6);
-    display1_rawSensorValue->setMinimumWidth(300);
+    lcdDisplay1Label = new QLabel();
+    lcdDisplay1 = new QLCDNumber();
+    lcdDisplay1->setDigitCount(6);
+    lcdDisplay1->setMinimumWidth(300);
 
-    display3_Rtemps = new QLCDNumber();
-    display3_Rtemps->setDigitCount(6);
-    display3_Rtemps->setMinimumWidth(300);
+    lcdDisplay2Label = new QLabel();
+    lcdDisplay2 = new QLCDNumber();
+    lcdDisplay2->setDigitCount(6);
+    lcdDisplay2->setMinimumWidth(300);
 
 
     QVBoxLayout *tempDisplaysLayout = new QVBoxLayout;
-    tempDisplaysLayout->addWidget(new QLabel("RAW Sensor Value"));
-    tempDisplaysLayout->addWidget(display1_rawSensorValue);
+    tempDisplaysLayout->addWidget(lcdDisplay1Label);
+    tempDisplaysLayout->addWidget(lcdDisplay1);
 
-    tempDisplaysLayout->addWidget(new QLabel("R waala Temps"));
-    tempDisplaysLayout->addWidget(display3_Rtemps);
+    tempDisplaysLayout->addWidget(lcdDisplay2Label);
+    tempDisplaysLayout->addWidget(lcdDisplay2);
 
 
 
@@ -537,40 +541,35 @@ void flirImgFrame::updateBlobArea(int area)
 
 void flirImgFrame::receiveStatusBarInfo(QPoint imgPos)
 {
-    //    qDebug() << "flirImgFrame::receiveStatusBarInfo "
-    //             << imgPos.x()
-    //             << ", "
-    //             << imgPos.y()
-    //             << " Width  - " << imgWidth
-    //             << " Height - " << imgHeight;
+    qDebug() << QString("flirImgFrame::receiveStatusBarInfo(%1, %2) - %3x%4").arg(imgPos.x()).arg(imgPos.y()).arg(imgWidth).arg(imgHeight);
     int colNum = imgPos.x();
     int rowNum = imgPos.y();
 
 
     if(colNum < 0 || rowNum < 0 || colNum > imgWidth || rowNum > imgHeight){
         statusBar->showMessage("Not over image");
-        display1_rawSensorValue->display(-1);
+        lcdDisplay1->display(-1);
+        lcdDisplay2->display(-1);
+        lcdDisplay1Label->setText("--");
+        lcdDisplay2Label->setText("--");
     }
     else{
       if(isLeafDetectionMode){
-        emit blobIDBataaoIsPointKa(imgPos);
-        // this should cause a chain of signals/slots to update
-        // the blob avg temparature of this place
-          QString statusString = QString::number(colNum)
-                                 + ", "
-                                 + QString::number(rowNum)
-                                 + " : Blob temp "
-                                 + QString::number(mousedOverBlobAvgTemp);
-          statusBar->showMessage(statusString);
+          statusBar->showMessage(segmentor->getStatusString(imgPos));
           //tempDisplay->setFont();
-          display1_rawSensorValue->display(mousedOverBlobAvgTemp);
+          lcdDisplay1Label->setText("Blob Area");
+          lcdDisplay1->display(segmentor->getIsPointKaBlobArea(imgPos));
+          lcdDisplay2Label->setText("Blob Avg Temp");
+          lcdDisplay2->display(segmentor->getIsPointKeBlobKaAvgTemp(imgPos));
       }
       else{
         // qDebug() << " flirImgFrame::receiveStatusBarInfo -- Trying to show "
         //          << fimg->getStatusString(posX, posY);
         statusBar->showMessage(fimg->getStatusString(rowNum, colNum));
-        display1_rawSensorValue->display(fimg->getOrderedRAWval(rowNum, colNum));
-        display3_Rtemps->display(fimg->getPixelTemperature(rowNum, colNum));
+        lcdDisplay1Label->setText("RAW Sensor Value");
+        lcdDisplay1->display(fimg->getOrderedRAWval(rowNum, colNum));
+        lcdDisplay2Label->setText("Temperature");
+        lcdDisplay2->display(fimg->getPixelTemperature(rowNum, colNum));
 
       }
     }

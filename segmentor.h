@@ -9,6 +9,7 @@ using namespace cv;
 #include <QObject>
 #include <QAbstractButton>
 #include "segmentorparams.h"
+#include "flirimg.h"
 
 class Segmentor : public QObject
 {
@@ -17,7 +18,7 @@ signals:
     void signalSegmentorProgress(int);
 public:
     Segmentor();
-    void loadDisplayRAWsImage(std::string imgpath, int flags);
+    void loadDisplayRAWsImage(flirImg *f, int flags);
     void calculateBlobAreas();
     void segmentImage();
 
@@ -30,7 +31,10 @@ public:
     std::vector<int>                  getSortedBlobAreas();
     std::vector<int>                  getSelectedBlobAreas();
     std::vector<std::vector<Point2i>> getBlobPoints();
-    std::vector<Point2i>              getIsPointKaBlob(QPoint p);
+    int                               getIsPointKaBlobArea(QPoint p);
+    int                               getIsPointKaBlobID(QPoint p);
+    double                            getIsPointKeBlobKaAvgTemp(QPoint p);
+    std::vector<Point2i>              getIsPointKeBlobKePoints(QPoint p);
     std::map<Point2i, int>            pointBlobIDMap;
 
 
@@ -45,11 +49,13 @@ public:
     Mat  getSegmentedColoredMat()           { return segmentedColoredMat;            }
     Mat  getFinalMat2()          { return final2;           }
     Mat  getSelectedMat()        { return selected;         }
+    QString getStatusString(QPoint);
 
     SegmentorParams* params()    { return sParams;          }
 public slots:
 
 private:
+    flirImg *fimg;
     Mat  src;
     void changeBackgroundImage();
     Mat  imgFiltered;
