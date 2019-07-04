@@ -179,6 +179,7 @@ public:
   bool        executeRepaletteImage();
 
   void displayUsingOpenCV(std::string, Mat);
+  void changePalette(ColormapTypes);
 
 };
 

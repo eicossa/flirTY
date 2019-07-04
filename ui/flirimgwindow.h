@@ -23,11 +23,14 @@ class QSplitter;
 class flirImg;
 
 #include <QMainWindow>
+#include <QProgressBar>
+#include <QComboBox>
 
-class flirImgWindow : public QWidget
+class flirImgWindow : public QMainWindow
 {
     Q_OBJECT
-public slots:
+private slots:
+    void openImagesFileDialog();
 //    void emitLeafButtonSignal(bool t)
 //    { qDebug() << " flirbabaWindow::emitLeafButtonSignal() - leaf button is pressed ka signal emitted ";
 //      emit leafDetectButtonToggled(t); }
@@ -38,7 +41,7 @@ public slots:
 //    { qDebug() << " flirbabaWindow::emitBlobAvgTempMilaBhosadiwaale(d) - blob avg temp mil gaya signal emitted " << d;
 //      emit blobAvgTempLeleMadarchod(d); }
 public:
-    flirImgWindow(QWidget *parent = 0);
+    flirImgWindow(QMainWindow *parent = 0);
     void initFlirImgWindow(flirImg*, Segmentor*);
     void setupScene();
     void updateOverlaidImage(cv::Mat);
@@ -52,6 +55,8 @@ private:
     void setupMatrix();
     void convert16bitGrayscaleToQImage();
     void connectEverything();
+    void setupProgressBars();
+    void setupPaletteComboBox();
 
     flirImg      *fimg;
     Segmentor    *segmentor;
@@ -60,10 +65,19 @@ private:
     QSplitter    *v1Splitter;
     QSplitter    *v2Splitter;
     QGraphicsScene *scene;
+    QComboBox    *paletteComboBox;
 
     QGraphicsPixmapItem originalPixmap, processedPixmap;
     //cv::Mat originalMat, processedMat;
     QImage originalImage, processedImage;
+
+    QProgressBar *pBarMetadata;
+    QProgressBar *pBarTempdata;
+    QProgressBar *pBarSegmentr;
+
+    QToolBar     *mainMenuToolbar;
+
+    QAction      *infernoAction;
 };
 
 

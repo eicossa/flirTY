@@ -27,7 +27,7 @@ class tgfsTabbedWindow : public QMainWindow
 {    
     Q_OBJECT
 public slots:
-    void openImagesFileDialog();
+    //void openImagesFileDialog();
     void loadDefaultImage();
     // void load5Images();
     // void displayOverlaidImageForOneImage(bool);

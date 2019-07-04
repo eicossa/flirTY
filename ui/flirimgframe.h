@@ -50,6 +50,7 @@ public slots:
     void                         displayPointInfoOnStatusBar(QPoint imgPos);
     void                         updateBlobAvgTemp(double d);
     void                         updateBlobArea(int a);
+    void                         changePalette(int);
 private slots:
     void                         resetView();
     void                         setResetButtonEnabled();

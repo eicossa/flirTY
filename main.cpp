@@ -26,8 +26,8 @@ void oneImageAtATime(tgfsTabbedWindow &w)
     flirImgWindow *fW = new flirImgWindow();
     segmentorWindow *sW = new segmentorWindow();
 
-    w.addView(fW, QString("Flirbaba Viewer"));
-    w.addView(sW, QString("Segmentor"));
+    w.addView(fW, QString("F"));
+    w.addView(sW, QString("S"));
 
 
     w.loadDefaultImage();

@@ -224,6 +224,13 @@ void flirImgFrame::displayImage()
     }
 }
 
+void flirImgFrame::changePalette(int c)
+{
+    cv::ColormapTypes d = (cv::ColormapTypes)c;
+    fimg->changePalette(d);
+    displayImage();
+}
+
 void flirImgFrame::zoomIn(int level)
 {
     zoomSlider->setValue(zoomSlider->value() + level);

@@ -162,7 +162,7 @@ void flirImg::applyPalette()
     //    displayUsingOpenCV("winter", repalettedThermalDisplayMat_winter);
 
     applyColorMap(grayscaleThermalDisplayMat, repalettedImgMat, COLORMAP_INFERNO);
-    displayUsingOpenCV("inferno", repalettedImgMat);
+    //displayUsingOpenCV("inferno", repalettedImgMat);
 
 
 }
@@ -170,6 +170,11 @@ void flirImg::applyPalette()
 bool flirImg::didDisplayRAWsConversionSucceed()
 {
 
+}
+
+void flirImg::changePalette(ColormapTypes ctype)
+{
+    applyColorMap(grayscaleThermalDisplayMat, repalettedImgMat, ctype);
 }
 
 QString flirImg::getStatusString(int rowNum, int colNum)

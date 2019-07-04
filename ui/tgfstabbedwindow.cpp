@@ -6,9 +6,6 @@ tgfsTabbedWindow::tgfsTabbedWindow(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new tgfsTabbedWindowPrivate(this))
 {
-    menubarWindow = new tgfsMainWindow();
-
-
     fW            = new flirImgWindow();
     sW            = new segmentorWindow();
     fimg          = new flirImg();
@@ -57,52 +54,16 @@ void tgfsTabbedWindow::removeView(int index)
 #include <QTimer>
 #include <QToolButton>
 void tgfsTabbedWindow::setupMenubars()
-{
-    //tgfsMainWindow mW;
-    //QMainWindow mW;
-    //mW.setStyleSheet("QMainWindow { background-color: red; }");
-    addView(menubarWindow, QString("Base"));
+{}
 
-    // Added test toolbar
-    QToolBar *tb = menubarWindow->addToolBar("toolbar");
-    tb->addAction("Instructions");
 
-    // Add test menubar
-    QAction *openFileDialogAction = new QAction("Open IR Image", menubarWindow);
-    //menubarWindow->setupImgReader(openFileDialogAction);
-    QMenu *m = menubarWindow->menuBar()->addMenu("File");
-    m->addAction(openFileDialogAction);
-    // newAct = new QAction(tr("&New"), this);
-    // newAct->setShortcuts(QKeySequence::New);
-    // newAct->setStatusTip(tr("Create a new file"));
-    // connect(openFileDialogAction, &QAction::triggered, this, &flirbabaWindow::openImagesFileDialog);
-    connect(openFileDialogAction, SIGNAL(triggered(bool)),
-            this, SLOT(openImagesFileDialog()));
-    //QTimer::singleShot(2000, this, SLOT(loadDefaultImage()));
-}
-
-void tgfsTabbedWindow::openImagesFileDialog()
-{
-  //custom behavior
-  //QString fileName = QFileDialog::getOpenFileName(/*args*/);
-
-  QString imgPath = QFileDialog::getOpenFileName(this,
-                                          tr("Open Input Image"),
-                                          QDir::homePath(),
-                                          tr("Images") + " (*.jpg *.png *.bmp)");
-  // need something here
-  // tu idhar aayega saale, jab deliver karna hoga
-  fimg->processImage(imgPath.toStdString());
-  segmentor = fimg->getSegmentorObject();
-  loadUi();
-}
 
 void tgfsTabbedWindow::loadUi()
 {
     menubarWindow->refreshProgressBars();
 
-    removeView(2);
     removeView(1);
+    removeView(0);
 
     fW->close();
     sW->close();
@@ -113,12 +74,10 @@ void tgfsTabbedWindow::loadUi()
     fW->initFlirImgWindow(fimg, segmentor);
     sW->initSegmentorWindow(segmentor);
 
-
     addView(fW, QString("Flirbaba Viewer"));
-
     addView(sW, QString("Segmentor"));
 
-    setCurrentView(1);
+    setCurrentView(0);
 }
 
 void tgfsTabbedWindow::loadDefaultImage()
@@ -137,8 +96,6 @@ void tgfsTabbedWindow::loadDefaultImage()
 
 void tgfsTabbedWindow::connectEverythingForOneImage()
 {
-    connect(fimg,                                    SIGNAL(signalFlirImgProgress(int)),
-            menubarWindow->getTempdataProgressBar(), SLOT(setValue(int)));
 //    connect(segmentor,                               SIGNAL(signalSegmentorProgress(int)),
 //            menubarWindow->getSegmentrProgressBar(), SLOT(setValue(int)));
 
