@@ -51,7 +51,7 @@ private slots:
 
 private:
     void setupImgDisplayer(cv::Mat img);
-    void setupSlots();
+    void connectEverything();
     void readImage(std::string fileName);
     void convertMatTypeToQImageType(cv::Mat, QImage&);
     QString *frameName;

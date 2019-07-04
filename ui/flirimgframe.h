@@ -42,56 +42,45 @@ class flirImgFrame : public QFrame
 {
     Q_OBJECT
 signals:
-    void leafButtonStatus(bool);
-//    void blobAvgTempBataaoIsPointKa(QPoint imgPos);
-    void blobIDBataaoIsPointKa(QPoint imgPos);
-//    void blobAreaBataaoIsPointKa(QPoint imgPos);
+    void                         leafButtonStatus(bool);
+    void                         blobIDBataaoIsPointKa(QPoint imgPos);
 public slots:
-    void zoomIn(int level = 1);
-    void zoomOut(int level = 1);
-    void receiveStatusBarInfo(QPoint imgPos);
-    void updateBlobAvgTemp(double d);
-    void updateBlobArea(int a);
+    void                         zoomIn(int level = 1);
+    void                         zoomOut(int level = 1);
+    void                         displayPointInfoOnStatusBar(QPoint imgPos);
+    void                         updateBlobAvgTemp(double d);
+    void                         updateBlobArea(int a);
 private slots:
-    void resetView();
-    void setResetButtonEnabled();
-    void setupMatrix();
-    void toggleImageDisplayMode();
+    void                         resetView();
+    void                         setResetButtonEnabled();
+    void                         setupMatrix();
+    void                         displayImage();
 
-    void toggleLeafButtonStatus();
-    void displayTransparentBlobOverlayScene();
-
-    void rotateLeft();
-    void rotateRight();
-    void updateStatusBar();
+    void                         rotateLeft();
+    void                         rotateRight();
 public:
     explicit flirImgFrame(const QString &name,
                           flirImg *fimg, Segmentor *segmentor,
                           QWidget *parent = 0);
-    void     setFlirImg(flirImg *fimg);
-    void     setImg(QImage *img);
-    QGraphicsView *view() const;
-    QToolButton*  getLeafDetectButton() { return leafDetectButton; }
-    void          updateWithOverlay(cv::Mat);
-    void          restoreOriginalImage();
+    QGraphicsView               *view() const;
+    QToolButton*                 getLeafDetectButton() { return leafDetectButton; }
+    void                         displayOverlaidImage(cv::Mat);
+    void                         displayOriginalImage();
 
 private:
-    void setupImgDisplayer();
+    void                          UiLayoutEverything();
+    void                          UiSetupImgDisplayer();
+    void                          UiSetupViewingModes();
+    void                          UiSetupProcessingModes();
+    void                          UiSetupZoomStuff();
+    void                          UiSetupRotateStuff();
+    void                          UiSetupTopButtonsLayout();
 
-    void displayBaseScene();
-    void displayUpdatedBaseScene();
-
-    void createBaseMat();
-    void createBaseScene();
-    void createBasePixmap();
-
-    void layoutEverything();
-
-    void createOverlayMat();
-    void createOverlayScene();
-    void createOverlayPixmap();
-
-    void updateBaseMat();
+    void                          updateLCDDisplays();
+    void                          displayBaseScene();
+    void                          createSceneFromMat(Mat);
+    void                          createOverlayScene();
+    void                          createOverlayPixmap();
 
     flirImgDisplayerGraphicsView *flirImgDisplayer;
     flirImg                      *fimg;
@@ -102,63 +91,61 @@ private:
     int                           mousedOverBlobArea;
     double                        overlay_alpha;
 
+    bool                          isMouseOverImage;
     bool                          isLeafDetectionMode;
+    bool                          isRepalettedImageViewMode;
+    bool                          isOrigImageViewMode;
+    bool                          isRawImageViewMode;
 
     QLabel                       *label;
-    QLabel                       *label2;
-    QLabel *lcdDisplay1Label;
-    QLabel *lcdDisplay2Label;
+    QLabel                       *imgDisplayModeLbl;
+    QLabel                       *lcdDisplay1Label;
+    QLabel                       *lcdDisplay2Label;
 
-    void                          setupViewingModes();
+
     QToolButton                  *rawImageViewButton;
     QToolButton                  *origImageViewButton;
     QToolButton                  *repalettedImageViewButton;
 
-    void                          setupProcessingModes();
-    QToolButton *leafDetectButton;
-    QToolButton *rectSelectButton;
-    QToolButton *pointSelectButton;
+    QToolButton                   *leafDetectButton;
+    QToolButton                   *rectSelectButton;
+    QToolButton                   *pointSelectButton;
+    QToolButton                   *resetButton;
 
-    QToolButton *resetButton;
+    void                          connectEverything();
 
-    void        connectEverything();
+    QSize                         *iconSize;
 
-    QSize       *iconSize;
+    QToolButton                   *zoomInIcon, *zoomOutIcon;
+    QSlider                       *zoomSlider;
+    QSlider                       *transparencySlider;
+    QVBoxLayout                   *zoomSliderLayout;
 
-    void         setupZoomStuff();
-    QToolButton *zoomInIcon;
-    QToolButton *zoomOutIcon;
-    QSlider     *zoomSlider;
-    QSlider     *transparencySlider;
-    QVBoxLayout *zoomSliderLayout;
+    QToolButton                   *rotateLeftIcon, *rotateRightIcon;
+    QSlider                       *rotateSlider;
+    QHBoxLayout                   *rotateSliderLayout;
+    QHBoxLayout                   *topButtonsLayout;
 
-    void         setupRotateStuff();
-    QToolButton *rotateLeftIcon;
-    QToolButton *rotateRightIcon;
-    QSlider     *rotateSlider;
-    QHBoxLayout *rotateSliderLayout;
+    QSlider                       *leafParam1Slider;
+    QSlider                       *leafParam2Slider;
+    QSlider                       *leafParam3Slider;
 
-    void         setupTopButtonsLayout();
-    QHBoxLayout *topButtonsLayout;
-
-
-    QSlider *leafParam1Slider;
-    QSlider *leafParam2Slider;
-    QSlider *leafParam3Slider;
+    QStatusBar                    *statusBar;
+    QLCDNumber                    *lcdDisplay1, *lcdDisplay2;
 
 
-    QStatusBar *statusBar;
-    QLCDNumber          *lcdDisplay1;
-    QLCDNumber          *lcdDisplay2;
+    //QGraphicsPixmapItem mainPixmap, overlayPixmap;
+    QGraphicsPixmapItem           imgPixmap;
+    cv::Mat                       baseMat, overlayMat, overlaidMat;
+    cv::Mat                       rawMat, rgbMat, repalettedMat, paletteMat;
+    //QImage              mainImage, overlayImage;
 
+    QGraphicsScene                *imgScene;
+    QImage                         imgImage;
 
-    QGraphicsPixmapItem basePixmap, overlayPixmap;
-    cv::Mat             baseMat, overlayMat, overlayMatOutput;
-    cv::Mat             rawMat, rgbMat, repalettedMat, paletteMat;
-    QImage              baseImage, overlayImage;
-
-    QGraphicsScene *baseScene;
-    QGraphicsScene *overlayScene;
+    // to track the current mouse position over the image
+    QPoint                         mousePos;
+    int                            mousePosColNum, mousePosRowNum;
 
 };
 

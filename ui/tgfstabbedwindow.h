@@ -29,11 +29,11 @@ class tgfsTabbedWindow : public QMainWindow
 public slots:
     void openImagesFileDialog();
     void loadDefaultImage();
-    void load5Images();
-    void displayOverlaidImageForOneImage(bool);
-    void displayOverlaidImageFor5ImagesAtATime(bool);
-    void aSignalHasBeenReceived(int);
-    void isPointKeBlobKaTempNikaaloMadarchod(QPoint p);
+    // void load5Images();
+    // void displayOverlaidImageForOneImage(bool);
+    // void displayOverlaidImageFor5ImagesAtATime(bool);
+    // void aSignalHasBeenReceived(int);
+    // void isPointKeBlobKaTempNikaaloMadarchod(QPoint p);
 signals:
     void signalProgress(int);
     void blobAvgTempLeleBhosdike(double);
@@ -53,40 +53,35 @@ public:
     void removeView(int index);
 
     // Set the view at the given index as the current view
-    void setCurrentView(int index);
+    void                         setCurrentView(int index);
 
     // Returns the current view
-    QWidget* currentView();
+    QWidget*                     currentView();
 
     // Setup the menubars
-    void setupMenubars();
+    void                         setupMenubars();
     // Process images
-    void buildFlirImgObjAndSegmentorObj(QString);
-    void addAnotherFlirImgAndSegmentorObj(QString);
-    void makeEverythingHappenWithOneImageAtATime(QString);
-    void makeEverythingHappenANewWay(QString);
+    //    void                         buildFlirImgObjAndSegmentorObj(QString);
+    //    void                         addAnotherFlirImgAndSegmentorObj(QString);
+    void                         makeEverythingHappenANewWay(QString);
 
 
-    void connectEverythingForOneImage();
-    void connectEverythingFor5Images();
-
-    void makeEverythingHappenWith5ImagesAtATime(QString);
-
-    flirImg* getFlirImg() { return this->fimg; }
-    Segmentor* getSegmentor() { return this->segmentor; }
+    void                         connectEverythingForOneImage();
+    void                         buildObjects(QString);
+    void                         loadUi();
 
 private:
-    tgfsTabbedWindowPrivate  *d_ptr;
-    tgfsMainWindow           *menubarWindow;
-    flirImgWindow           *fW;
-    segmentorWindow          *sW;
-    QProgressBar             *pBar;
-    flirImg                  *fimg;
-    Segmentor                *segmentor;
-    cv::Mat                  originalMat;
-    int                      numOfImagesDisplayed;
+    tgfsTabbedWindowPrivate      *d_ptr;
+    tgfsMainWindow               *menubarWindow;
+    flirImgWindow                *fW;
+    segmentorWindow              *sW;
+    QProgressBar                 *pBar;
+    flirImg                      *fimg;
+    Segmentor                    *segmentor;
+    cv::Mat                       originalMat;
+    int                           numOfImagesDisplayed;
 
-    std::vector<flirImgWindow*>  fWindows;
+    std::vector<flirImgWindow*>   fWindows;
     std::vector<segmentorWindow*> sWindows;
     std::vector<flirImg*>         fImgs;
     std::vector<Segmentor*>       segmentors;

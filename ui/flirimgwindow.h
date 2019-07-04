@@ -10,9 +10,9 @@
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
 
-#include <opencv2/opencv.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv4/opencv2/opencv.hpp>
+#include <opencv4/opencv2/imgproc/imgproc.hpp>
+#include <opencv4/opencv2/highgui/highgui.hpp>
 //#include "cvflirbabainterface.h"
 #include "flirimg.h"
 #include "flirimgframe.h"
@@ -22,15 +22,15 @@ class QGraphicsScene;
 class QSplitter;
 class flirImg;
 
-
+#include <QMainWindow>
 
 class flirImgWindow : public QWidget
 {
     Q_OBJECT
 public slots:
-    void emitLeafButtonSignal(bool t)
-    { qDebug() << " flirbabaWindow::emitLeafButtonSignal() - leaf button is pressed ka signal emitted ";
-      emit leafDetectButtonToggled(t); }
+//    void emitLeafButtonSignal(bool t)
+//    { qDebug() << " flirbabaWindow::emitLeafButtonSignal() - leaf button is pressed ka signal emitted ";
+//      emit leafDetectButtonToggled(t); }
 //    void emitBlobBataaoIsPointKaSignal(QPoint t)
 //    { qDebug() << " flirbabaWindow::emitBlobBataaoIsPointKaSignal - blob bataao is point ka signal emitted ";
 //      emit plssBlobBataaoIsPointKa(t); }
@@ -44,11 +44,11 @@ public:
     void updateOverlaidImage(cv::Mat);
     void restoreOriginalImage();
 signals:
-    void leafDetectButtonToggled(bool t);
+//    void leafDetectButtonToggled(bool t);
 //    void plssBlobBataaoIsPointKa(QPoint t);
 //    void blobAvgTempLeleMadarchod(double d);
 private:
-    void setupWindow();
+    void UiSetupWindow();
     void setupMatrix();
     void convert16bitGrayscaleToQImage();
     void connectEverything();

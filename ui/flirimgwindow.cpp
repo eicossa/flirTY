@@ -6,6 +6,7 @@
 #include "segmentor.h"
 
 #include <QMessageBox>
+#include <QToolBar>
 
 using namespace std;
 
@@ -24,25 +25,25 @@ void flirImgWindow::initFlirImgWindow(flirImg* flirImgObject, Segmentor* segment
     mainImgFrame     = new flirImgFrame("Left view", fimg, segmentor);
 
     // qDebug() << " flirbabaWindow::readImage() -- created a new imgFrame";
-    setupWindow();
+    UiSetupWindow();
     connectEverything();
 }
 
 void flirImgWindow::connectEverything()
 {
-    connect(mainImgFrame, SIGNAL(leafButtonStatus(bool)),
-            this,         SLOT(emitLeafButtonSignal(bool)));
-//    connect(mainImgFrame, SIGNAL(blobIDBataaoIsPointKa(QPoint)),
-//            this,         SLOT(emitBlobIDBataaoIsPointKaSignal(QPoint)));
+    //    connect(mainImgFrame, SIGNAL(leafButtonStatus(bool)),
+    //            this,         SLOT(emitLeafButtonSignal(bool)));
+    //    connect(mainImgFrame, SIGNAL(blobIDBataaoIsPointKa(QPoint)),
+    //            this,         SLOT(emitBlobIDBataaoIsPointKaSignal(QPoint)));
 
 
-//    connect(this,    SIGNAL(blobAvgTempLeleMadarchod(double)),
-//            mainImgFrame, SLOT(updateBlobAvgTemp(double)));
-//    connect(mainImgFrame, SIGNAL(blobAvgTempBataaoIsPointKa(QPoint)),
-//            this,    SLOT(emitBlobBataaoIsPointKaSignal(QPoint)));
+    //    connect(this,    SIGNAL(blobAvgTempLeleMadarchod(double)),
+    //            mainImgFrame, SLOT(updateBlobAvgTemp(double)));
+    //    connect(mainImgFrame, SIGNAL(blobAvgTempBataaoIsPointKa(QPoint)),
+    //            this,    SLOT(emitBlobBataaoIsPointKaSignal(QPoint)));
 }
 
-void flirImgWindow::setupWindow()
+void flirImgWindow::UiSetupWindow()
 {
     v1Splitter = new QSplitter;
     v2Splitter = new QSplitter;
@@ -58,8 +59,29 @@ void flirImgWindow::setupWindow()
     layout->addWidget(hSplitter);
 
     setLayout(layout);
+//    QLayout* l = this->layout();
+//    l->addWidget(hSplitter);
 
     setWindowTitle(tr("FLIR Img Processor"));
+
+    //addView(this, QString("Base"));
+    // Added test toolbar
+//    QToolBar *tb = this->addToolBar("toolbar");
+//    tb->addAction("Instructions");
+
+
+
+//    // Add test menubar
+//    QAction *openFileDialogAction = new QAction("Open IR Image", menubarWindow);
+//    //menubarWindow->setupImgReader(openFileDialogAction);
+//    QMenu *m = this->menuBar()->addMenu("File");
+//    m->addAction(openFileDialogAction);
+    // newAct = new QAction(tr("&New"), this);
+    // newAct->setShortcuts(QKeySequence::New);
+    // newAct->setStatusTip(tr("Create a new file"));
+    // connect(openFileDialogAction, &QAction::triggered, this, &flirbabaWindow::openImagesFileDialog);
+//    connect(openFileDialogAction, SIGNAL(triggered(bool)),
+//            this, SLOT(openImagesFileDialog()));
 }
 
 void flirImgWindow::setupScene()
@@ -67,12 +89,12 @@ void flirImgWindow::setupScene()
 
 }
 
-void flirImgWindow::updateOverlaidImage(cv::Mat overlay)
-{
-    mainImgFrame->updateWithOverlay(overlay);
-}
+//void flirImgWindow::updateOverlaidImage(cv::Mat overlay)
+//{
+//    mainImgFrame->displayOverlaidImage(overlay);
+//}
 
-void flirImgWindow::restoreOriginalImage()
-{
-    mainImgFrame->restoreOriginalImage();
-}
+//void flirImgWindow::restoreOriginalImage()
+//{
+//    mainImgFrame->displayOriginalImage();
+//}

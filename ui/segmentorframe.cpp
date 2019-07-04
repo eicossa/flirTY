@@ -71,7 +71,7 @@ void segmentorFrame::setupImgDisplayer(cv::Mat img)
     segmentorImgDisplayer->setScene(origScene);
 }
 
-void segmentorFrame::setupSlots()
+void segmentorFrame::connectEverything()
 {
     connect(processButton, SIGNAL(clicked(bool)), this, SLOT(updateProcessedImage()));
 }

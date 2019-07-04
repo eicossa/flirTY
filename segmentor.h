@@ -1,15 +1,14 @@
 #ifndef SEGMENTOR_H
 #define SEGMENTOR_H
 
-#include <opencv2/opencv.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv4/opencv2/opencv.hpp>
+#include <opencv4/opencv2/imgproc/imgproc.hpp>
+#include <opencv4/opencv2/highgui/highgui.hpp>
 using namespace cv;
 
 #include <QObject>
 #include <QAbstractButton>
 #include "segmentorparams.h"
-#include "flirimg.h"
 
 class Segmentor : public QObject
 {
@@ -18,7 +17,7 @@ signals:
     void signalSegmentorProgress(int);
 public:
     Segmentor();
-    void loadDisplayRAWsImage(flirImg *f, int flags);
+    void initSegmentor(Mat src);
     void calculateBlobAreas();
     void segmentImage();
 
@@ -48,14 +47,13 @@ public:
     Mat  getMarkersMat()         { return markers;          }
     Mat  getSegmentedColoredMat()           { return segmentedColoredMat;            }
     Mat  getFinalMat2()          { return final2;           }
-    Mat  getSelectedMat()        { return selected;         }
+    Mat  getOverlayMat()        { return selected;         }
     QString getStatusString(QPoint);
 
     SegmentorParams* params()    { return sParams;          }
 public slots:
 
 private:
-    flirImg *fimg;
     Mat  src;
     void changeBackgroundImage();
     Mat  imgFiltered;

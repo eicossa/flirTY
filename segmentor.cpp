@@ -15,14 +15,27 @@ Segmentor::Segmentor()
     blobPoints        = std::vector<std::vector<Point2i>>();
 }
 
-void Segmentor::loadDisplayRAWsImage(flirImg* fimg, int flags)
+void Segmentor::initSegmentor(Mat srcMat)
 {
   using namespace std;
-  this->fimg = fimg;
-  qDebug()  << " Segmentor::loadDisplayRAWsImage - About to do it";
-  src = imread(fimg->getDisplayRAWsImgpath(), flags);
-  qDebug()  << " Segmentor::loadDisplayRAWsImage - Type of image read in : "
-            << src.type();
+  //this->fimg = fimg;
+  //qDebug()  << " Segmentor::loadDisplayRAWsImage - About to do it";
+  //src = imread(fimg->getDisplayOrderedRAWsImgpath().toStdString(), flags);
+  //qDebug()  << " Segmentor::loadDisplayRAWsImage - Type of image read in : "
+  //          << src.type();
+  src = srcMat.clone();
+  if(src.type() == 2){
+    qDebug() << "Segmentor::initSegmentor -- Got image of type 16UC1";
+  }
+  if(src.type() == 16){
+    qDebug() << "Segmentor::initSegmentor -- Got image of type 8UC3";
+  }
+  if(src.type() == 0){
+    qDebug() << "Segmentor::initSegmentor -- Got image of type 8UC1";
+    src.convertTo(src, CV_8UC3);
+    qDebug() << "Segmentor::initSegmentor -- Converted to 8UC3";
+  }
+
 
   sParams = new SegmentorParams();
 }
@@ -96,10 +109,17 @@ void Segmentor::binarizeImage()
 {
   int binaryThreshLoVal, binaryThreshMaxVal, binaryThreshFlags;
   this->params()->getBinaryThreshParams(binaryThreshLoVal, binaryThreshMaxVal, binaryThreshFlags);
+  qDebug() << "Segmentor::binarizeImage -- Type of imgMorphologized" << imgMorphologized.type();
   //binaryMaxval   = 255;
   //thresholdingTypeFlags  = THRESH_BINARY | THRESH_OTSU;
-  cvtColor(imgMorphologized, bw, COLOR_BGR2GRAY);
-  threshold(bw, bw, binaryThreshLoVal, binaryThreshMaxVal, binaryThreshFlags);
+  try{
+    cvtColor(imgMorphologized, bw, COLOR_BGR2GRAY);
+  }
+  catch(cv::Exception &e) { qDebug() << "Segmentor::binarizeImage -- cvtColor Exception " << e.what(); exit;}
+
+
+  try{ threshold(bw, bw, binaryThreshLoVal, binaryThreshMaxVal, binaryThreshFlags);}
+  catch(cv::Exception &e) { qDebug() << "Segmentor::binarizeImage -- threshold Exception " << e.what(); exit;}
   //imshow("binarized", bw);
 
 }
@@ -372,7 +392,9 @@ std::vector<Point2i> Segmentor::getIsPointKeBlobKePoints(QPoint p)
 
 double Segmentor::getIsPointKeBlobKaAvgTemp(QPoint p)
 {
-    return fimg->calcBlobAvgTemp(getIsPointKeBlobKePoints(p));
+    //serious issue here
+    //return fimg->calcBlobAvgTemp(getIsPointKeBlobKePoints(p));
+    // return -1;
 
     //    // qDebug() << " tgfsTabbedWindow::isPointKeBlobKaTempNikaaloMadarchod(QPointF p) - Inside madarchod blob nikaalo " << p.x() << ", " << p.y();
     //    std::vector<Point2i> pts;
@@ -414,18 +436,15 @@ QString Segmentor::getStatusString(QPoint imgPos)
 
 void Segmentor::segmentImage()
 {
-  changeBackgroundImage();   emit signalSegmentorProgress(10);
-  // qDebug() << " Segmentor : segmentImage() - Background done ";
-  filterImage();             emit signalSegmentorProgress(20);
-  morphologizeImage();       emit signalSegmentorProgress(30);
-  binarizeImage();           emit signalSegmentorProgress(40);
-  distanceTransformImage();  emit signalSegmentorProgress(50);
-  obtainPeaksImage();        emit signalSegmentorProgress(60);
-  watershedImage();          emit signalSegmentorProgress(70);
-  // qDebug() << " Segmentor : segmentImage() - Watershedding done";
-  colorizeImageSegments();   emit signalSegmentorProgress(100);
+  changeBackgroundImage();   emit signalSegmentorProgress(10); qDebug() << " Segmentor::segmentImage() - Background done ";
+  filterImage();             emit signalSegmentorProgress(20); qDebug() << " Segmentor::segmentImage() - Filter done ";
+  morphologizeImage();       emit signalSegmentorProgress(30); qDebug() << " Segmentor::segmentImage() - Morphologization done ";
+  binarizeImage();           emit signalSegmentorProgress(40); qDebug() << " Segmentor::segmentImage() - Binarization done ";
+  distanceTransformImage();  emit signalSegmentorProgress(50); qDebug() << " Segmentor::segmentImage() - Distance Transform done ";
+  obtainPeaksImage();        emit signalSegmentorProgress(60); qDebug() << " Segmentor::segmentImage() - Peaks done ";
+  watershedImage();          emit signalSegmentorProgress(70); qDebug() << " Segmentor::segmentImage() - Watershedding done ";
+  colorizeImageSegments();   emit signalSegmentorProgress(100); qDebug() << " Segmentor : segmentImage() - Colorization done ";
   updateWithSelectedBlobAreas(0, numOfBlobs - 1);
-  // qDebug() << " Segmentor : segmentImage() - Colorization done";
 
   // calculateBlobAreas();
 }

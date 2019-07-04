@@ -68,7 +68,7 @@ void segmentorWindow::createAllImgFrames()
 //    peaksImgFrame    = new segmentorFrame("Peaks",              segmentor->getPeaksMat());
 //    markersImgFrame  = new segmentorFrame("Markers",            segmentor->getMarkersMat());
     finalImgFrame         = new segmentorFrame("Final",    segmentor->getSegmentedColoredMat());
-    selectedAreasImgFrame = new segmentorFrame("Selected", segmentor->getSelectedMat());
+    selectedAreasImgFrame = new segmentorFrame("Selected", segmentor->getOverlayMat());
     // qDebug() << "segmentorWindow -- createAllImgFrames() -- ended";
 }
 
@@ -80,7 +80,7 @@ segmentorWindow::~segmentorWindow()
 cv::Mat segmentorWindow::getOverlayImage()
 {
     //return segmentor->getFinalMat();
-    return segmentor->getSelectedMat();
+    return segmentor->getOverlayMat();
 }
 
 void segmentorWindow::morphologyOperator(int op)
@@ -398,7 +398,7 @@ void segmentorWindow::createDistanceTransformDock()
 void segmentorWindow::updateSelectedAreasFrame()
 {
     if(selectedAreasImgFrame){
-        selectedAreasImgFrame->updateProcessedImage(segmentor->getSelectedMat());
+        selectedAreasImgFrame->updateProcessedImage(segmentor->getOverlayMat());
     }
 }
 
@@ -416,7 +416,7 @@ void segmentorWindow::updateAllFrames()
 
     //markersImgFrame->updateProcessedImage(segmentor->getMarkersMat());
     finalImgFrame->updateProcessedImage(segmentor->getSegmentedColoredMat());
-    selectedAreasImgFrame->updateProcessedImage(segmentor->getSelectedMat());
+    selectedAreasImgFrame->updateProcessedImage(segmentor->getOverlayMat());
 
     // qDebug() << " segmentorWindow -- updateAllFrames() -- About to update blob area sliders ";
     // updateBlobAreaSliders();

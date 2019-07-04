@@ -25,14 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        shellexecutor.cpp \
         segmentor.cpp \
         segmentorparams.cpp \
         flirimg.cpp \
-        flirimgmetadata.cpp \
         errmsgs.cpp \
         exec.cpp \
-        cmdstrings.cpp \
         blob.cpp \
         imgoperatorwindows.cpp \
         ui/flirimgframe.cpp \
@@ -47,18 +44,20 @@ SOURCES += \
         ui/tgfsmainwindow.cpp \
         ui/progressbarframe.cpp \
         ui/superslider.cpp \
-        ui/rangeslider.cpp
+        ui/rangeslider.cpp \
+    flirimg_extract.cpp \
+    flirimg_calc.cpp \
+    flirimg_exec.cpp \
+    flirimg_io.cpp \
+    ui/flirimgframe_ui.cpp
 
 HEADERS += \
-    shellexecutor.h \
     segmentor.h \
     segmentorparams.h \
     flirimg.h \
-    flirimgmetadata.h \
     utilfunc.h \
     errmsgs.h \
     exec.h \
-    cmdstrings.h \
     blob.h \
     imgoperatorwindows.h \
     ui/flirimgwindow.h \
@@ -99,8 +98,9 @@ win32: {
 }
 
 unix: !macx{
+  #INCLUDEPATH += "/usr/local/include"
   CONFIG      += link_pkgconfig
-  PKGCONFIG   += opencv
+  PKGCONFIG   += opencv4
 }
 
 unix: macx{
