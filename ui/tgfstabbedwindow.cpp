@@ -1,18 +1,32 @@
 #include "tgfstabbedwindow.h"
 #include "tgfstabbedwindowprivate.h"
 #include "imgoperatorwindows.h"
+#include <QAction>
+#include <QMenu>
+#include <QMenuBar>
 
 tgfsTabbedWindow::tgfsTabbedWindow(QWidget *parent) :
     QMainWindow(parent),
     d_ptr(new tgfsTabbedWindowPrivate(this))
 {
-    fW            = new flirImgWindow();
-    sW            = new segmentorWindow();
-    fimg          = new flirImg();
-    segmentor     = new Segmentor();
-    numOfImagesDisplayed = 1;
 
-    setupMenubars();
+    numOfImagesDisplayed = 0;
+
+    // Add test menubar
+    QAction *openFileDialogAction = new QAction("Open", this);
+    openFileDialogAction->setStatusTip(tr("Open Radiometric JPEG"));
+    //menubarWindow->setupImgReader(openFileDialogAction);
+    fileMenu = this->menuBar()->addMenu("File");
+    fileMenu->addAction(openFileDialogAction);
+
+    editMenu = this->menuBar()->addMenu("Edit");
+    editMenu->addAction(openFileDialogAction);
+
+    helpMenu = this->menuBar()->addMenu("Help");
+    helpMenu->addAction(openFileDialogAction);
+
+    connect(openFileDialogAction, SIGNAL(triggered(bool)),
+            this,                 SLOT(openImagesFileDialog()));
 }
 
 tgfsTabbedWindow::~tgfsTabbedWindow()
@@ -53,54 +67,54 @@ void tgfsTabbedWindow::removeView(int index)
 #include <QMenuBar>
 #include <QTimer>
 #include <QToolButton>
-void tgfsTabbedWindow::setupMenubars()
-{}
 
 
-
-void tgfsTabbedWindow::loadUi()
+void tgfsTabbedWindow::addAnotherTab(QString imgPath)
 {
-    menubarWindow->refreshProgressBars();
-
-    removeView(1);
-    removeView(0);
-
-    fW->close();
-    sW->close();
-
+    flirImg *fimg = new flirImg(imgPath);
+    flirImgWindow *fW;
     fW = new flirImgWindow();
-    sW = new segmentorWindow();
-
-    fW->initFlirImgWindow(fimg, segmentor);
-    sW->initSegmentorWindow(segmentor);
-
-    addView(fW, QString("Flirbaba Viewer"));
-    addView(sW, QString("Segmentor"));
-
-    setCurrentView(0);
+    fW->initFlirImgWindow(fimg);
+    addView(fW, QString(fimg->getFileName()));
+    numOfImagesDisplayed += 1;
 }
 
 void tgfsTabbedWindow::loadDefaultImage()
 {
     qDebug() << "tgfsTabbedWindow::Current Path : " << QDir::currentPath();
     QString currPath = QDir::currentPath();
-    //QString imgPath  = currPath + "/nabtdimgs/FLIR1097/FLIR1097.jpg";
-    QString imgPath  = currPath + "/nabtdimgs/FLIR1329/FLIR1329.jpg";
+    QString imgPath1  = currPath + "/nabtdimgs/FLIR1097/FLIR1097.jpg";
+    QString imgPath2  = currPath + "/nabtdimgs/FLIR0179/FLIR0179.jpg";
+//    QString imgPath3  = currPath + "/nabtdimgs/FLIR1329/FLIR1311.jpg";
+//    QString imgPath4  = currPath + "/nabtdimgs/FLIR1329/FLIR1312.jpg";
+//    QString imgPath5  = currPath + "/nabtdimgs/FLIR1329/FLIR1319.jpg";
+//    QString imgPath6  = currPath + "/nabtdimgs/FLIR1329/FLIR1320.jpg";
+//    QString imgPath7  = currPath + "/nabtdimgs/FLIR1329/FLIR1321.jpg";
+//    QString imgPath8  = currPath + "/nabtdimgs/FLIR1329/FLIR1322.jpg";
+    QString imgPath9  = currPath + "/nabtdimgs/FLIR1329/FLIR1329.jpg";
 
-    fimg->processImage(imgPath.toStdString());
-    segmentor = fimg->getSegmentorObject();
 
-    loadUi();
-    connectEverythingForOneImage();
+    addAnotherTab(imgPath1);
+    addAnotherTab(imgPath2);
+//    addAnotherTab(imgPath3);
+//    addAnotherTab(imgPath4);
+//    addAnotherTab(imgPath5);
+//    addAnotherTab(imgPath6);
+//    addAnotherTab(imgPath7);
+//    addAnotherTab(imgPath8);
+    addAnotherTab(imgPath9);
 }
 
-void tgfsTabbedWindow::connectEverythingForOneImage()
-{
-//    connect(segmentor,                               SIGNAL(signalSegmentorProgress(int)),
-//            menubarWindow->getSegmentrProgressBar(), SLOT(setValue(int)));
 
-    // connect(fimg,                                    SIGNAL(signalFlirImgProgress(int)),
-    //         this,                                    SLOT(aSignalHasBeenReceived(int)));
-    // connect(segmentor,                               SIGNAL(signalSegmentorProgress(int)),
-    //         this,                                    SLOT(aSignalHasBeenReceived(int)));
+void tgfsTabbedWindow::openImagesFileDialog()
+{
+  //custom behavior
+  //QString fileName = QFileDialog::getOpenFileName(/*args*/);
+
+  QString imgPath = QFileDialog::getOpenFileName(this,
+                                          tr("Open Input Image"),
+                                          QDir::homePath(),
+                                          tr("Images") + " (*.jpg *.png *.bmp)");
+
+  addAnotherTab(imgPath);
 }

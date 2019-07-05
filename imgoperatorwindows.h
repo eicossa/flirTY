@@ -26,12 +26,12 @@ public:
     flirImg*         getFlirImg()         { return this->fimg;      }
     Segmentor*       getSegmentor()       { return this->segmentor; }
     flirImgWindow*  getFlirbabaWindow()  { return this->fW; }
-    segmentorWindow* getSegmentorWindow() { return this->sW; }
+    //segmentorWindow* getSegmentorWindow() { return this->sW; }
 
 private:
     int                      numOfBlobs;
     flirImgWindow           *fW;
-    segmentorWindow          *sW;
+    //segmentorWindow          *sW;
     flirImg                  *fimg;
     Segmentor                *segmentor;
     cv::Mat                  originalMat;

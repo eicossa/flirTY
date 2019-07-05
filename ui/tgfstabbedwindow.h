@@ -26,14 +26,10 @@ class tgfsTabbedWindowPrivate;
 class tgfsTabbedWindow : public QMainWindow
 {    
     Q_OBJECT
+private slots:
+    void openImagesFileDialog();
 public slots:
-    //void openImagesFileDialog();
     void loadDefaultImage();
-    // void load5Images();
-    // void displayOverlaidImageForOneImage(bool);
-    // void displayOverlaidImageFor5ImagesAtATime(bool);
-    // void aSignalHasBeenReceived(int);
-    // void isPointKeBlobKaTempNikaaloMadarchod(QPoint p);
 signals:
     void signalProgress(int);
     void blobAvgTempLeleBhosdike(double);
@@ -65,26 +61,17 @@ public:
     //    void                         addAnotherFlirImgAndSegmentorObj(QString);
     void                         makeEverythingHappenANewWay(QString);
 
-
-    void                         connectEverythingForOneImage();
     void                         buildObjects(QString);
     void                         loadUi();
+    void                         addAnotherTab(QString);
 
 private:
     tgfsTabbedWindowPrivate      *d_ptr;
-    tgfsMainWindow               *menubarWindow;
-    flirImgWindow                *fW;
-    segmentorWindow              *sW;
-    QProgressBar                 *pBar;
-    flirImg                      *fimg;
-    Segmentor                    *segmentor;
-    cv::Mat                       originalMat;
     int                           numOfImagesDisplayed;
-
-    std::vector<flirImgWindow*>   fWindows;
-    std::vector<segmentorWindow*> sWindows;
-    std::vector<flirImg*>         fImgs;
-    std::vector<Segmentor*>       segmentors;
+    QToolBar*                     mainMenuToolbar;
+    QMenu*                        fileMenu;
+    QMenu*                        editMenu;
+    QMenu*                        helpMenu;
 };
 
 #endif // TFGSMAINWINDOW_H

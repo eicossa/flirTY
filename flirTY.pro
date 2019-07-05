@@ -38,7 +38,6 @@ SOURCES += \
         ui/tgfstabbar.cpp \
         ui/tgfstabbedwindow.cpp \
         ui/tgfstabbedwindowprivate.cpp \
-        ui/segmentorwindow.cpp \
         ui/tabberghostwindow.cpp \
         ui/segmentorframe.cpp \
         ui/tgfsmainwindow.cpp \
@@ -49,7 +48,8 @@ SOURCES += \
     flirimg_calc.cpp \
     flirimg_exec.cpp \
     flirimg_io.cpp \
-    ui/flirimgframe_ui.cpp
+    ui/flirimgframe_ui.cpp \
+    ui/segmentor_ui.cpp
 
 HEADERS += \
     segmentor.h \

@@ -24,14 +24,13 @@ void testOnlyFlirImg()
 void oneImageAtATime(tgfsTabbedWindow &w)
 {
     flirImgWindow *fW = new flirImgWindow();
-    segmentorWindow *sW = new segmentorWindow();
+    //segmentorWindow *sW = new segmentorWindow();
 
-    w.addView(fW, QString("F"));
-    w.addView(sW, QString("S"));
+    //w.addView(fW, QString("F"));
 
 
     w.loadDefaultImage();
-    w.connectEverythingForOneImage();
+    //w.connectEverythingForOneImage();
 }
 
 

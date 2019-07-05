@@ -62,6 +62,13 @@ void flirImg::extractAllTags()
     RawThermalImageType   = flirTagsMap["Raw Thermal Image Type"]                         .toStdString();
     palName               = flirTagsMap["Palette Name"]                                   .toStdString();
 
+    fileName              = flirTagsMap["File Name"];
+
+}
+
+QString flirImg::getFileName()
+{
+    return fileName;
 }
 
 bool flirImg::extractPalette()

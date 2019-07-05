@@ -46,6 +46,7 @@ private:
   QString                unorderedRAWsCSVFile;
 
   QString                metadataFile;
+  QString                fileName;
 
   // read thermal metadata
   double             planckr1, planckb, planckf, plancko, planckr2;
@@ -100,9 +101,11 @@ private:
 
   bool               doesFileExist (const QString&);
   unsigned short     changeByteOrder(unsigned short);
+  void               updateSegmentorObjDetails();
 
 public:
   flirImg();
+  flirImg(QString);
   void                processImage(std::string fimgpath);
   void                printImageSummary();
   void                extractThermalRaw();
@@ -180,6 +183,8 @@ public:
 
   void displayUsingOpenCV(std::string, Mat);
   void changePalette(ColormapTypes);
+
+  QString     getFileName();
 
 };
 

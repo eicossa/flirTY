@@ -19,46 +19,51 @@ flirImgWindow::flirImgWindow(QMainWindow *parent)
 }
 
 #include <QFileDialog>
-void flirImgWindow::initFlirImgWindow(flirImg* flirImgObject, Segmentor* segmentorObject)
+void flirImgWindow::initFlirImgWindow(flirImg* flirImgObject)
 {
     this->fimg      = flirImgObject;
-    this->segmentor = segmentorObject;
+    this->segmentor = flirImgObject->getSegmentorObject();
 
     mainImgFrame     = new flirImgFrame("Left view", fimg, segmentor);
 
     // qDebug() << " flirbabaWindow::readImage() -- created a new imgFrame";
     UiSetupWindow();
+    createDockWindows();
     connectEverything();
 }
 
-void flirImgWindow::openImagesFileDialog()
+#include <QDockWidget>
+void flirImgWindow::createDockWindows()
 {
-  //custom behavior
-  //QString fileName = QFileDialog::getOpenFileName(/*args*/);
+    createMorphologyDock();
+    createBlobSliderDock();
+    addDockWidget(Qt::RightDockWidgetArea, morphologyDock);
+    addDockWidget(Qt::RightDockWidgetArea, blobAreaSliderDock);
+    morphologyDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    blobAreaSliderDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    viewMenu->addAction(morphologyDock->toggleViewAction());
+    viewMenu->addAction(blobAreaSliderDock->toggleViewAction());
 
-  QString imgPath = QFileDialog::getOpenFileName(this,
-                                          tr("Open Input Image"),
-                                          QDir::homePath(),
-                                          tr("Images") + " (*.jpg *.png *.bmp)");
-  // need something here
-  // tu idhar aayega saale, jab deliver karna hoga
-  fimg->processImage(imgPath.toStdString());
-  segmentor = fimg->getSegmentorObject();
+//    connect(customerList, &QListWidget::currentTextChanged,
+//            this, &MainWindow::insertCustomer);
+//    connect(paragraphsList, &QListWidget::currentTextChanged,
+//            this, &MainWindow::addParagraph);
 }
+
+
 
 void flirImgWindow::connectEverything()
 {
+    //connect(operatorButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(morphologyOperator(int)));
+    //connect(kernelButtonGroup,   SIGNAL(buttonClicked(int)), this, SLOT(morphologyKernelShape(int)));
+    connect(kernelSizeSlider,    SIGNAL(valueChanged(int)),  this, SLOT(morphologyKernelSize(int)));
+    connect(iternumSizeSlider,   SIGNAL(valueChanged(int)),  this, SLOT(morphologyIternum(int)));
 
-    //    connect(mainImgFrame, SIGNAL(leafButtonStatus(bool)),
-    //            this,         SLOT(emitLeafButtonSignal(bool)));
-    //    connect(mainImgFrame, SIGNAL(blobIDBataaoIsPointKa(QPoint)),
-    //            this,         SLOT(emitBlobIDBataaoIsPointKaSignal(QPoint)));
+    connect(rS, SIGNAL(lowerValueChanged(int)), this, SLOT(displayMinBlobAreaSliderKaValue(int)));
+    connect(rS, SIGNAL(upperValueChanged(int)), this, SLOT(displayMaxBlobAreaSliderKaValue(int)));
 
-
-    //    connect(this,    SIGNAL(blobAvgTempLeleMadarchod(double)),
-    //            mainImgFrame, SLOT(updateBlobAvgTemp(double)));
-    //    connect(mainImgFrame, SIGNAL(blobAvgTempBataaoIsPointKa(QPoint)),
-    //            this,    SLOT(emitBlobBataaoIsPointKaSignal(QPoint)));
+    // connect(this, SIGNAL(displayMinBlobArea(int)), minBlobAreaDisplay, SLOT(display(int)));
+    // connect(this, SIGNAL(displayMaxBlobArea(int)), maxBlobAreaDisplay, SLOT(display(int)));
 }
 
 void flirImgWindow::UiSetupWindow()
@@ -73,56 +78,30 @@ void flirImgWindow::UiSetupWindow()
 
     v1Splitter->addWidget(mainImgFrame);
 
-
-
     // Added test toolbar
-    mainMenuToolbar = this->addToolBar("toolbar");
+    flirImgToolbar = this->addToolBar("flirImgToolbar");
     //tb->addAction("Instructions");
+    viewMenu = this->menuBar()->addMenu("View");
 
-    // Add test menubar
-    QAction *openFileDialogAction = new QAction("Open", this);
-    openFileDialogAction->setStatusTip(tr("Open Radiometric JPEG"));
-    //menubarWindow->setupImgReader(openFileDialogAction);
-    QMenu *fileMenu = this->menuBar()->addMenu("File");
-    fileMenu->addAction(openFileDialogAction);
 
-    QMenu *editMenu = this->menuBar()->addMenu("Edit");
-    editMenu->addAction(openFileDialogAction);
-
-    QMenu *helpMenu = this->menuBar()->addMenu("Help");
-    helpMenu->addAction(openFileDialogAction);
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(hSplitter);
 
-
-
-    connect(openFileDialogAction, SIGNAL(triggered(bool)),
-            this,                 SLOT(openImagesFileDialog()));
-    // setLayout(layout);
-    //QLayout* l = (QHBoxLayout*)(this->layout());
-    //l->addWidget(mainImgFrame);
-    //setLayout(l);
-
     setupProgressBars();
     setupPaletteComboBox();
-
-
 
     QWidget* w = new QWidget();
     w->setLayout(layout);
     setCentralWidget(w);
 
-
     setWindowTitle(tr("flirTY"));
-
 }
 
 void flirImgWindow::setupScene()
 {
 
 }
-
 
 //cv::COLORMAP_AUTUMN = 0,
 //cv::COLORMAP_BONE = 1,
@@ -172,7 +151,7 @@ void flirImgWindow::setupPaletteComboBox()
     connect(paletteComboBox, SIGNAL(currentIndexChanged(int)),
             mainImgFrame,    SLOT(changePalette(int)));
 
-    mainMenuToolbar->addWidget(paletteComboBox);
+    flirImgToolbar->addWidget(paletteComboBox);
 }
 
 void flirImgWindow::setupProgressBars()
@@ -185,42 +164,9 @@ void flirImgWindow::setupProgressBars()
     pBarMetadata->setVisible(true);
     pBarMetadata->setEnabled(true);
 
-    pBarTempdata = new QProgressBar();
-    pBarTempdata->setMinimum(0);
-    pBarTempdata->setMaximum(100);
-    pBarTempdata->setVisible(true);
-    pBarTempdata->setEnabled(true);
+    flirImgToolbar->addWidget(pBarMetadata);
 
-    pBarSegmentr = new QProgressBar();
-    pBarSegmentr->setMinimum(0);
-    pBarSegmentr->setMaximum(100);
-    pBarSegmentr->setVisible(true);
-    pBarSegmentr->setEnabled(true);
-//    QProgressBar *pBar2 = new QProgressBar();
-//    pBar2->setMinimum(0);
-//    pBar2->setMaximum(100);
-//    pBar2->setVisible(true);
-//    pBar2->setEnabled(true);
-
-    QHBoxLayout *layout = new QHBoxLayout;
-
-    layout->addWidget(pBarMetadata);
-    layout->addWidget(pBarTempdata);
-    layout->addWidget(pBarSegmentr);
-
-
-    mainMenuToolbar->addWidget(pBarMetadata);
-    //mainMenuToolbar->addWidget(pBarTempdata);
-    //mainMenuToolbar->addWidget(pBarSegmentr);
-
+    setupMorphologicalKernelOperatorGroupBox();
+    setupMorphologicalKernelShapeGroupBox();
+    setupMorphologicalKernelSizeSliders();
 }
-
-//void flirImgWindow::updateOverlaidImage(cv::Mat overlay)
-//{
-//    mainImgFrame->displayOverlaidImage(overlay);
-//}
-
-//void flirImgWindow::restoreOriginalImage()
-//{
-//    mainImgFrame->displayOriginalImage();
-//}

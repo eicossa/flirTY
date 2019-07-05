@@ -93,13 +93,17 @@ void flirImg::normalizeTempMat()
 
 Mat flirImg::getTransparencyOverlaidMat(double overlay_alpha)
 {
-    overlaidMat      = Mat::zeros(orderedRAWsMat.size(), CV_8UC3);
+    overlaidMat      = Mat::zeros(grayscaleThermalDisplayMat.size(), CV_8UC3);
     Mat overlay      = segmentor->getOverlayMat();
 
-    cv::addWeighted(orderedRAWsMat,    1.0 - overlay_alpha,
+    qDebug() << "flirImg::getTransparencyOverlaidMat -- Size of overlay" << overlay.size().width << " " << overlay.size().height;
+    qDebug() << "flirImg::getTransparencyOverlaidMat -- Size of overlaid " << overlaidMat.size().width << " " << overlaidMat.size().height;
+
+    cv::addWeighted(overlaidMat,    1.0 - overlay_alpha,
                     overlay,    overlay_alpha,
                     0.0,
                     overlaidMat);
+    qDebug() << "flirImg::getTransparencyOverlaidMat -- Done with the addition";
     return overlaidMat;
 }
 
@@ -250,4 +254,10 @@ flirImg::flirImg()
   orderedRAWs_imgpath ="";
   emsgs   = new ErrMsgs();
   temperatures = NULL;
+}
+
+flirImg::flirImg(QString imgPath)
+{
+    flirImg();
+    processImage(imgPath.toStdString());
 }

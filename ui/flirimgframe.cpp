@@ -204,14 +204,6 @@ void flirImgFrame::displayImage()
     isRawImageViewMode        = rawImageViewButton->isChecked()        ? true : false;
     isRepalettedImageViewMode = repalettedImageViewButton->isChecked() ? true : false;
 
-    if(isRepalettedImageViewMode){
-        double minVal, maxVal;
-        Mat b = fimg->getRepalettedImgMat().clone();
-        minMaxIdx(b, &minVal, &maxVal);
-        qDebug() << "Min : " << minVal
-                 << "Max : " << maxVal;
-    }
-
     if(!isLeafDetectionMode){
         if(isRawImageViewMode)        baseMat = fimg->getGrayscaleThermalMat().clone();
         if(isOrigImageViewMode)       baseMat = fimg->getOrigImgMat().clone();
@@ -220,7 +212,9 @@ void flirImgFrame::displayImage()
         flirImgDisplayer->setScene(imgScene);
     }
     if(isLeafDetectionMode){
+        qDebug() << "flirImgFrame::displayImage -- About to update overlay";
         displayOverlaidImage(segmentor->getOverlayMat());
+        qDebug() << "flirImgFrame::displayImage -- Done with overlay update";
     }
 }
 
