@@ -43,11 +43,6 @@ void flirImgWindow::createDockWindows()
     blobAreaSliderDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     viewMenu->addAction(morphologyDock->toggleViewAction());
     viewMenu->addAction(blobAreaSliderDock->toggleViewAction());
-
-//    connect(customerList, &QListWidget::currentTextChanged,
-//            this, &MainWindow::insertCustomer);
-//    connect(paragraphsList, &QListWidget::currentTextChanged,
-//            this, &MainWindow::addParagraph);
 }
 
 
@@ -61,6 +56,8 @@ void flirImgWindow::connectEverything()
 
     connect(rS, SIGNAL(lowerValueChanged(int)), this, SLOT(displayMinBlobAreaSliderKaValue(int)));
     connect(rS, SIGNAL(upperValueChanged(int)), this, SLOT(displayMaxBlobAreaSliderKaValue(int)));
+
+    //connect()
 
     // connect(this, SIGNAL(displayMinBlobArea(int)), minBlobAreaDisplay, SLOT(display(int)));
     // connect(this, SIGNAL(displayMaxBlobArea(int)), maxBlobAreaDisplay, SLOT(display(int)));
@@ -82,8 +79,6 @@ void flirImgWindow::UiSetupWindow()
     flirImgToolbar = this->addToolBar("flirImgToolbar");
     //tb->addAction("Instructions");
     viewMenu = this->menuBar()->addMenu("View");
-
-
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(hSplitter);

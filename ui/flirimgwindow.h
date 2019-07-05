@@ -35,16 +35,6 @@ class flirImg;
 class flirImgWindow : public QMainWindow
 {
     Q_OBJECT
-
-//    void emitLeafButtonSignal(bool t)
-//    { qDebug() << " flirbabaWindow::emitLeafButtonSignal() - leaf button is pressed ka signal emitted ";
-//      emit leafDetectButtonToggled(t); }
-//    void emitBlobBataaoIsPointKaSignal(QPoint t)
-//    { qDebug() << " flirbabaWindow::emitBlobBataaoIsPointKaSignal - blob bataao is point ka signal emitted ";
-//      emit plssBlobBataaoIsPointKa(t); }
-//    void emitBlobAvgTempMilaBhosadiwaale(double d)
-//    { qDebug() << " flirbabaWindow::emitBlobAvgTempMilaBhosadiwaale(d) - blob avg temp mil gaya signal emitted " << d;
-//      emit blobAvgTempLeleMadarchod(d); }
 public:
     flirImgWindow(QMainWindow *parent = 0);
     void initFlirImgWindow(flirImg*);
@@ -53,9 +43,7 @@ public:
     void restoreOriginalImage();
     void createDockWindows();
 signals:
-//    void leafDetectButtonToggled(bool t);
-//    void plssBlobBataaoIsPointKa(QPoint t);
-//    void blobAvgTempLeleMadarchod(double d);
+
 private:
     void UiSetupWindow();
     void setupMatrix();
@@ -74,7 +62,6 @@ private:
     QComboBox    *paletteComboBox;
 
     QGraphicsPixmapItem originalPixmap, processedPixmap;
-    //cv::Mat originalMat, processedMat;
     QImage originalImage, processedImage;
 
     QProgressBar *pBarMetadata;
@@ -82,7 +69,6 @@ private:
     QProgressBar *pBarSegmentr;
 
     QToolBar     *flirImgToolbar;
-
     QAction      *infernoAction;
 
     QTextEdit    *textEdit;
