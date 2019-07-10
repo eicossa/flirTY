@@ -1,6 +1,5 @@
 #include "tgfstabbedwindow.h"
 #include "tgfstabbedwindowprivate.h"
-#include "imgoperatorwindows.h"
 #include <QAction>
 #include <QMenu>
 #include <QMenuBar>
@@ -19,11 +18,11 @@ tgfsTabbedWindow::tgfsTabbedWindow(QWidget *parent) :
     fileMenu = this->menuBar()->addMenu("File");
     fileMenu->addAction(openFileDialogAction);
 
-    editMenu = this->menuBar()->addMenu("Edit");
-    editMenu->addAction(openFileDialogAction);
+    //editMenu = this->menuBar()->addMenu("Edit");
+    //editMenu->addAction(openFileDialogAction);
 
-    helpMenu = this->menuBar()->addMenu("Help");
-    helpMenu->addAction(openFileDialogAction);
+    //helpMenu = this->menuBar()->addMenu("Help");
+    //helpMenu->addAction(openFileDialogAction);
 
     connect(openFileDialogAction, SIGNAL(triggered(bool)),
             this,                 SLOT(openImagesFileDialog()));

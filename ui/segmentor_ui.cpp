@@ -1,9 +1,6 @@
 #include "flirimgwindow.h"
 #include "segmentor.h"
-//#include "segmentorframe.h"
-
-#include <opencv4/opencv2/highgui/highgui.hpp>
-
+#include "opencv_headers.h"
 #include <QFileDialog>
 #include <QDir>
 #include <QHBoxLayout>
@@ -155,6 +152,8 @@ void flirImgWindow::setupMorphologicalKernelOperatorGroupBox()
     vbox1->setSpacing(1);
 
     operatorGroupBox->setLayout(vbox1);
+
+    connect(operatorButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(morphologyOperator(int)));
 }
 
 
@@ -180,6 +179,8 @@ void flirImgWindow::setupMorphologicalKernelShapeGroupBox()
     vbox2->setSpacing(1);
 
     kernelGroupBox->setLayout(vbox2);
+
+    connect(kernelButtonGroup,   SIGNAL(buttonClicked(int)), this, SLOT(morphologyKernelShape(int)));
 }
 
 
@@ -233,7 +234,7 @@ void flirImgWindow::setupBlobAreaSlidersGroupBox()
     minBlobAreaDisplay->setDigitCount(7);
     maxBlobAreaDisplay->setDigitCount(7);
 
-    rS                     = new RangeSlider(this);
+    blobAreaRSlider                     = new RangeSlider(this);
 
     QHBoxLayout* hLayout = new QHBoxLayout;
     hLayout->addWidget(minimumSizeSliderLabel);
@@ -243,7 +244,7 @@ void flirImgWindow::setupBlobAreaSlidersGroupBox()
     hLayout->addWidget(maximumSizeSliderLabel);
 
     blobSizeSliderLayout->addItem(hLayout);
-    blobSizeSliderLayout->addWidget(rS);
+    blobSizeSliderLayout->addWidget(blobAreaRSlider);
     blobSizeSliderLayout->addStretch();
 
     blobSizeSlidersGroupBox->setLayout(blobSizeSliderLayout);
@@ -256,7 +257,7 @@ void flirImgWindow::updateRangeSliderAfterSegmentorObjectHasChanged()
     // qDebug() << " segmentorWindow : updateBlobAreaSliders() -- begun ";
     //emit  displayMinBlobArea(sortedBlobAreasElemAtPos(0));
     //emit  displayMaxBlobArea(sortedBlobAreasElemAtPos(numOfBlobs-1));
-    rS->SetRange(0, numOfBlobs-1);
+    blobAreaRSlider->SetRange(0, numOfBlobs-1);
     // qDebug() << " segmentorWindow : updateBlobAreaSliders() -- finis ";
 }
 
@@ -354,7 +355,7 @@ void flirImgWindow::updateSegmentorObjDetails()
 
 void flirImgWindow::updateOverlay()
 {
-    mainImgFrame->displayOverlaidImage(segmentor->getOverlayMat());
+    mainImgFrame->displayOverlaidImage();
     updateRangeSliderAfterSegmentorObjectHasChanged();
 }
 
@@ -369,8 +370,6 @@ void flirImgWindow::createMorphologyDock()
     morphologyDock->setAllowedAreas(Qt::LeftDockWidgetArea);
 
     QFrame *morphologyFrame = new QFrame(morphologyDock);
-
-
 
     QLayout* hboxlayout = new QHBoxLayout;
     hboxlayout->addWidget(operatorGroupBox);

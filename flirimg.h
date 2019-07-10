@@ -4,10 +4,8 @@
 #include <cmath>
 #include <string>
 #include <stdio.h>
-
-#include <opencv4/opencv2/core.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
-#include <opencv4/opencv2/highgui/highgui.hpp>
+#include "opencv_headers.h"
+using namespace cv;
 
 #include <QMap>
 #include <QObject>
@@ -76,8 +74,10 @@ private:
   Mat                 rawpalette_imgMat, palette_imgMat;
   Mat                 overlaidMat;
   Mat                 temperatures;
-  Mat                 normalizedThermalDisplayMat;
+  Mat                 normalizedThermalMat;
   Mat                 grayscaleThermalDisplayMat;
+  Mat                 rangedGrayscaleThermalDisplayMat;
+  Mat                 rangedRepalettedThermalDisplayMat;
   // image processors for the image
   Segmentor           *segmentor;
 
@@ -103,6 +103,7 @@ private:
   unsigned short     changeByteOrder(unsigned short);
   void               updateSegmentorObjDetails();
 
+
 public:
   flirImg();
   flirImg(QString);
@@ -116,6 +117,7 @@ public:
   void                applyPalette();
 
   QString             getStatusString(int, int);
+  QString             getSegmentorStatusString(QPoint);
 
   double              calcRawObjForRawThermal(double);
   double              calcTempFromRawObjValue(double);
@@ -127,7 +129,7 @@ public:
   void                segmentImage();
   Mat                 getPixelTemperatures(){return temperatures;}
   double              getPixelTemperature(int x, int y);
-  int                 getOrderedRAWval(int x, int y);
+  unsigned short      getOrderedRAWval(int x, int y);
   int                 getExtThermalValue(int x, int y);
 
   QString             getImgPath()                      { return imgpath; }
@@ -140,7 +142,7 @@ public:
   Mat                 getOrderedRAWsImgMat()            { return orderedRAWsMat;           }
   Mat                 getOrigImgMat()                   { return origImgMat;               }
   Mat                 getGrayscaleThermalMat()          { return grayscaleThermalDisplayMat;}
-
+  Mat                 getRangedThermalMat()             { return rangedGrayscaleThermalDisplayMat; }
   Mat                 getRepalettedImgMat()             { return repalettedImgMat;  }
 
   Mat                 getTransparencyOverlaidMat(double);
@@ -185,6 +187,9 @@ public:
   void changePalette(ColormapTypes);
 
   QString     getFileName();
+
+  void        getNormalizedRAWMinMax(int&, int&);
+  Mat                getRangedMat(int, int, bool);
 
 };
 

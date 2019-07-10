@@ -8,7 +8,7 @@
 #include <QProgressBar>
 #include <QGridLayout>
 
-#include <opencv2/opencv.hpp>
+#include "opencv_headers.h"
 #include "segmentor.h"
 //#include "graphicsscene.h"
 using namespace cv;

@@ -7,6 +7,7 @@
 #include <QGraphicsPixmapItem>
 #include "flirimg.h"
 #include "segmentor.h"
+#include "rangeslider.h"
 
 class QLabel;
 class QSlider;
@@ -44,9 +45,8 @@ class flirImgFrame : public QFrame
 signals:
     void                         leafButtonStatus(bool);
     void                         blobIDBataaoIsPointKa(QPoint imgPos);
+    void                         changeOverlayAlpha(int);
 public slots:
-    void                         zoomIn(int level = 1);
-    void                         zoomOut(int level = 1);
     void                         displayPointInfoOnStatusBar(QPoint imgPos);
     void                         updateBlobAvgTemp(double d);
     void                         updateBlobArea(int a);
@@ -57,16 +57,25 @@ private slots:
     void                         setupMatrix();
     void                         displayImage();
 
+    void                         updateOverlayTransparency(int);
+
     void                         rotateLeft();
     void                         rotateRight();
+    void                         zoomIn();
+    void                         zoomOut();
+    void                         changeUpperRange(int);
+    void                         changeLowerRange(int);
 public:
     explicit flirImgFrame(const QString &name,
-                          flirImg *fimg, Segmentor *segmentor,
+                          flirImg *fimg,
                           QWidget *parent = 0);
     QGraphicsView               *view() const;
     QToolButton*                 getLeafDetectButton() { return leafDetectButton; }
-    void                         displayOverlaidImage(cv::Mat);
+    void                         displayOverlaidImage();
     void                         displayOriginalImage();
+    QSlider                       *transparencySlider; // i know this will come back to bite me in the ass
+    RangeSlider                   *tempRangeSlider;
+    QSlider                       *zoomSlider;
 
 private:
     void                          UiLayoutEverything();
@@ -78,10 +87,12 @@ private:
     void                          UiSetupTopButtonsLayout();
 
     void                          updateLCDDisplays();
+
     void                          displayBaseScene();
     void                          createSceneFromMat(Mat);
     void                          createOverlayScene();
     void                          createOverlayPixmap();
+    void                          displayRangedMat();
 
     flirImgDisplayerGraphicsView *flirImgDisplayer;
     flirImg                      *fimg;
@@ -118,8 +129,8 @@ private:
     QSize                         *iconSize;
 
     QToolButton                   *zoomInIcon, *zoomOutIcon;
-    QSlider                       *zoomSlider;
-    QSlider                       *transparencySlider;
+
+
     QVBoxLayout                   *zoomSliderLayout;
 
     QToolButton                   *rotateLeftIcon, *rotateRightIcon;

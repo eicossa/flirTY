@@ -48,7 +48,6 @@ void flirImgFrame::UiSetupZoomStuff()
     // Zoom slider layout
     zoomSliderLayout = new QVBoxLayout;
     zoomSliderLayout->addWidget(zoomInIcon);
-    zoomSliderLayout->addWidget(zoomSlider);
     zoomSliderLayout->addWidget(transparencySlider);
     zoomSliderLayout->addWidget(zoomOutIcon);
 }
@@ -70,10 +69,17 @@ void flirImgFrame::UiSetupRotateStuff()
     rotateSlider->setValue(0);
     rotateSlider->setTickPosition(QSlider::TicksBelow);
 
+    tempRangeSlider = new RangeSlider();
+    int rmin, rmax;
+    fimg->getNormalizedRAWMinMax(rmin, rmax);
+
+    tempRangeSlider->setMinimum(0);
+    tempRangeSlider->setMaximum(100);
+
     // Rotate slider layout
     rotateSliderLayout = new QHBoxLayout;
     rotateSliderLayout->addWidget(rotateLeftIcon);
-    rotateSliderLayout->addWidget(rotateSlider);
+    rotateSliderLayout->addWidget(tempRangeSlider);
     rotateSliderLayout->addWidget(rotateRightIcon);
 }
 

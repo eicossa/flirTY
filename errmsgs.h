@@ -1,7 +1,7 @@
 #ifndef ERRMSGS_H
 #define ERRMSGS_H
 #include <iostream>
-#include <opencv2/opencv.hpp>
+#include "opencv_headers.h"
 #include <string>
 using namespace std;
 using namespace cv;

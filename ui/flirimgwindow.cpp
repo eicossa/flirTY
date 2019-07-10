@@ -24,7 +24,7 @@ void flirImgWindow::initFlirImgWindow(flirImg* flirImgObject)
     this->fimg      = flirImgObject;
     this->segmentor = flirImgObject->getSegmentorObject();
 
-    mainImgFrame     = new flirImgFrame("Left view", fimg, segmentor);
+    mainImgFrame     = new flirImgFrame("main display", fimg);
 
     // qDebug() << " flirbabaWindow::readImage() -- created a new imgFrame";
     UiSetupWindow();
@@ -49,18 +49,22 @@ void flirImgWindow::createDockWindows()
 
 void flirImgWindow::connectEverything()
 {
-    //connect(operatorButtonGroup, SIGNAL(buttonClicked(int)), this, SLOT(morphologyOperator(int)));
-    //connect(kernelButtonGroup,   SIGNAL(buttonClicked(int)), this, SLOT(morphologyKernelShape(int)));
+
+
     connect(kernelSizeSlider,    SIGNAL(valueChanged(int)),  this, SLOT(morphologyKernelSize(int)));
     connect(iternumSizeSlider,   SIGNAL(valueChanged(int)),  this, SLOT(morphologyIternum(int)));
 
-    connect(rS, SIGNAL(lowerValueChanged(int)), this, SLOT(displayMinBlobAreaSliderKaValue(int)));
-    connect(rS, SIGNAL(upperValueChanged(int)), this, SLOT(displayMaxBlobAreaSliderKaValue(int)));
+    //connect(blobAreaRSlider, SIGNAL(lowerValueChanged(int)), this, SLOT(displayMinBlobAreaSliderKaValue(int)));
+    //connect(blobAreaRSlider, SIGNAL(upperValueChanged(int)), this, SLOT(displayMaxBlobAreaSliderKaValue(int)));
 
+    connect(mainImgFrame->transparencySlider, SIGNAL(valueChanged(int)),
+            mainImgFrame,                     SLOT(updateOverlayTransparency(int)));
     //connect()
 
     // connect(this, SIGNAL(displayMinBlobArea(int)), minBlobAreaDisplay, SLOT(display(int)));
     // connect(this, SIGNAL(displayMaxBlobArea(int)), maxBlobAreaDisplay, SLOT(display(int)));
+
+
 }
 
 void flirImgWindow::UiSetupWindow()

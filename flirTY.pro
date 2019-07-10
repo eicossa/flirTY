@@ -31,7 +31,6 @@ SOURCES += \
         errmsgs.cpp \
         exec.cpp \
         blob.cpp \
-        imgoperatorwindows.cpp \
         ui/flirimgframe.cpp \
         ui/flirimgwindow.cpp \
         ui/tgfstabview.cpp \
@@ -59,7 +58,6 @@ HEADERS += \
     errmsgs.h \
     exec.h \
     blob.h \
-    imgoperatorwindows.h \
     ui/flirimgwindow.h \
     ui/tgfstabview.h \
     ui/tgfstabbar.h \
@@ -73,29 +71,57 @@ HEADERS += \
     ui/rangeslider.h \
     ui/segmentorframe.h \
     ui/flirimgframe.h \
+    opencv_headers.h
 
 FORMS +=
 
+
+#INCLUDEPATH += C:\Users\eicossa\opencv4bild\install\include
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_core400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_dnn400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_features2d400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_flann400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_highgui400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_imgcodecs400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_imgproc400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_ml400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_objdetect400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_photo400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_shape400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_stitching400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_superres400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_video400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_videostab400.dll
+#LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_calib3d400.dll
+#PKGCONFIG += opencv
+
+
+#PKGCONFIG += opencv4
+
 win32: {
-  INCLUDEPATH += C:\Users\eicossa\opencv4bild\install\include
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_core400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_dnn400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_features2d400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_flann400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_highgui400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_imgcodecs400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_imgproc400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_ml400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_objdetect400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_photo400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_shape400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_stitching400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_superres400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_video400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_videostab400.dll
-  LIBS += C:\Users\eicossa\opencv4bild\bin\libopencv_calib3d400.dll
-  PKGCONFIG += opencv
+  INCLUDEPATH += C:\Users\eicossa\Downloads\opencv410bild\install\include
+  #LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_world410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_core410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_dnn410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_features2d410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_flann410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_highgui410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_imgcodecs410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_imgproc410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_ml410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_objdetect410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_photo410.dll
+  #LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_shape410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_stitching410.dll
+  #LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_superres410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_video410.dll
+  #LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_videostab410.dll
+  LIBS        += C:\Users\eicossa\Downloads\opencv410bild\bin\libopencv_calib3d410.dll
+  PKGCONFIG   += opencv
 }
+
+
+
 
 unix: !macx{
   #INCLUDEPATH += "/usr/local/include"

@@ -10,9 +10,9 @@
 #include <QGraphicsPixmapItem>
 #include <QFileDialog>
 
-#include <opencv4/opencv2/opencv.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
-#include <opencv4/opencv2/highgui/highgui.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
 //#include "cvflirbabainterface.h"
 #include "flirimg.h"
@@ -146,7 +146,7 @@ private:
     QLCDNumber     *minBlobAreaDisplay;
     QLCDNumber     *maxBlobAreaDisplay;
 
-    RangeSlider    *rS;
+    RangeSlider    *blobAreaRSlider;
 
 
 signals:

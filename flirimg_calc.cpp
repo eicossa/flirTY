@@ -160,10 +160,11 @@ unsigned short flirImg::changeByteOrder(unsigned short wrongByteOrder)
     x3              = x2 << 8;
     y               = x1 + x3;
     reOrderedRAWval = y;
+    return reOrderedRAWval;
 }
 
 #include <inttypes.h>
-#include <arpa/inet.h>
+//#include <arpa/inet.h>
 
 
 

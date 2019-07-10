@@ -1,9 +1,7 @@
 #ifndef SEGMENTORWINDOW_H
 #define SEGMENTORWINDOW_H
 
-#include <opencv2/opencv.hpp>
-#include "opencv2/imgproc/imgproc.hpp"
-#include <opencv2/highgui/highgui.hpp>
+#include "opencv_headers.h"
 #include "segmentor.h"
 #include "segmentorframe.h"
 #include "rangeslider.h"

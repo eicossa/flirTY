@@ -32,12 +32,12 @@ void flirImg::processImage(std::string fimgpath)
     normalizeTempMat();
     generateGrayscaleImage();
     applyPalette();
-    if(extractPalette()){
+//    if(extractPalette()){
 
-    }
-    if(extractEmbeddedRGBImage()){
+//    }
+//    if(extractEmbeddedRGBImage()){
 
-    }
+//    }
     segmentor = new Segmentor();
     segmentor->initSegmentor(getRepalettedImgMat().clone());
     segmentor->segmentImage();
@@ -55,17 +55,15 @@ void flirImg::processImage(std::string fimgpath)
 
 void flirImg::generateGrayscaleImage()
 {
-    grayscaleThermalDisplayMat = Mat::zeros(normalizedThermalDisplayMat.size(), CV_8UC1);
+    grayscaleThermalDisplayMat = Mat::zeros(normalizedThermalMat.size(), CV_8UC1);
     for(int colNum=0; colNum<rawthermalimagewidth; colNum++){
         for(int rowNum=0; rowNum<rawthermalimageheight; rowNum++){
-            double         g1 = normalizedThermalDisplayMat.at<double>(rowNum, colNum);
+            double         g1 = normalizedThermalMat.at<double>(rowNum, colNum);
                            g1 = g1 * 255;
             uchar g2          = (uchar)(g1);
             grayscaleThermalDisplayMat.at<uchar>(rowNum, colNum) = g2;
         }
     }
-
-
 }
 
 
@@ -74,32 +72,84 @@ void flirImg::normalizeTempMat()
     Mat srcMat                = temperatures.clone();
     double                       t, final_t;
     double                      norm_t;
-    normalizedThermalDisplayMat = Mat::zeros(srcMat.size(), CV_64FC1);
+    normalizedThermalMat = Mat::zeros(srcMat.size(), CV_64FC1);
     double minval, maxval;
     minMaxIdx(srcMat, &minval, &maxval);
     for(int colNum=0; colNum<rawthermalimagewidth; colNum++){
         for(int rowNum=0; rowNum<rawthermalimageheight; rowNum++){
             t                    = srcMat.at<double>(rowNum, colNum);
             norm_t               = (double)(t - minval)/(double)(maxval - minval);
-            normalizedThermalDisplayMat.at<double>(rowNum, colNum) = norm_t;
+            normalizedThermalMat.at<double>(rowNum, colNum) = norm_t;
             //qDebug() << "t : " << t << " norm_t : " << norm_t;
         }
         //qDebug() << "Normalized Temp " << norm_t;
     }
-
-
 }
 
+// map the (lower, upper) bounds to the
+// raw value range
+// then return a matrix with only those pixels
+// that lie between these two values
+Mat flirImg::getRangedMat(int lower, int upper, bool isRepalettedMode)
+{
+    // rawmin corresponds to 0
+    // rawmax corresponds to 100
+    // lower-upper corresponds to what values between rawmin-rawmax ?
+    int    minRawSelected, maxRawSelected;
+    double grayRawMax, grayRawMin, grayRawDelta;
+    //rawDelta = rawMax - rawMin;
+    minMaxIdx(unorderedRAWsMat, &grayRawMin, &grayRawMax);
+    grayRawDelta = grayRawMax - grayRawMin;
+    minRawSelected = rawMin + ((lower * grayRawDelta)/100);
+    maxRawSelected = rawMin + ((upper * grayRawDelta)/100);
+    qDebug() << "flirImg::getRangedMat() - lowerBound : " << lower << " upperBound " << upper;
+    qDebug() << "flirImg::getRangedMat() - minRawSelected : " << minRawSelected << "maxRawSelected" << maxRawSelected;
+    int validPixCount = 0;
+
+    rangedGrayscaleThermalDisplayMat = Mat::zeros(grayscaleThermalDisplayMat.size(), CV_8UC1);
+    rangedGrayscaleThermalDisplayMat = grayscaleThermalDisplayMat.clone();
+    rangedRepalettedThermalDisplayMat= Mat::zeros(repalettedImgMat.size(), CV_8UC3);
+    rangedRepalettedThermalDisplayMat= repalettedImgMat.clone();
+    for(int colNum=0; colNum < rawthermalimagewidth; colNum++){
+        for(int rowNum=0; rowNum < rawthermalimageheight; rowNum++){
+            unsigned short v = unorderedRAWsMat.at<unsigned short>(rowNum, colNum);
+            //qDebug() << "Testing " << v << " against " << minRawSelected << " and " << maxRawSelected;
+            if(v >= minRawSelected && v <= maxRawSelected){
+                //rangedGrayscaleThermalDisplayMat.at<uchar>(rowNum, colNum) = grayscaleThermalDisplayMat.at<uchar>(rowNum, colNum);
+                validPixCount += 1;
+            }
+            else{
+                if(isRepalettedMode)
+                    rangedRepalettedThermalDisplayMat.at<Vec3b>(rowNum, colNum) = Vec3b(255,255,255);
+                else
+                    rangedGrayscaleThermalDisplayMat.at<uchar>(rowNum, colNum) = 255;
+            }
+        }
+    }
+
+    qDebug() << "flirImgFrame::getRangedMat() -- Valid Pix Count " << validPixCount;
+    if(isRepalettedMode)
+        return rangedRepalettedThermalDisplayMat;
+    else
+        return rangedGrayscaleThermalDisplayMat;
+}
+
+void flirImg::getNormalizedRAWMinMax(int &rmin, int &rmax)
+{
+    double a, b;
+    minMaxIdx(grayscaleThermalDisplayMat, &a, &b);
+    rmin = (int)a;
+    rmax = (int)b;
+}
 
 Mat flirImg::getTransparencyOverlaidMat(double overlay_alpha)
 {
     overlaidMat      = Mat::zeros(grayscaleThermalDisplayMat.size(), CV_8UC3);
+    Mat srcMat       = Mat::zeros(grayscaleThermalDisplayMat.size(), CV_8UC3);
+    cv::cvtColor(grayscaleThermalDisplayMat, srcMat, cv::COLOR_GRAY2BGR);
     Mat overlay      = segmentor->getOverlayMat();
 
-    qDebug() << "flirImg::getTransparencyOverlaidMat -- Size of overlay" << overlay.size().width << " " << overlay.size().height;
-    qDebug() << "flirImg::getTransparencyOverlaidMat -- Size of overlaid " << overlaidMat.size().width << " " << overlaidMat.size().height;
-
-    cv::addWeighted(overlaidMat,    1.0 - overlay_alpha,
+    cv::addWeighted(srcMat,    1.0 - overlay_alpha,
                     overlay,    overlay_alpha,
                     0.0,
                     overlaidMat);
@@ -111,64 +161,8 @@ Mat flirImg::getTransparencyOverlaidMat(double overlay_alpha)
 using namespace cv;
 void flirImg::applyPalette()
 {
-    repalettedImgMat = Mat::zeros(normalizedThermalDisplayMat.size(), CV_8UC3);
-
-    //    Mat repalettedThermalDisplayMat_rainbow;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_rainbow, COLORMAP_RAINBOW);
-    //    displayUsingOpenCV("rainbow", repalettedThermalDisplayMat_rainbow);
-
-    //    Mat repalettedThermalDisplayMat_autumn;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_autumn, COLORMAP_AUTUMN);
-    //    displayUsingOpenCV("autumn", repalettedThermalDisplayMat_autumn);
-
-    //    Mat repalettedThermalDisplayMat_bone;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_bone, COLORMAP_BONE);
-    //    displayUsingOpenCV("bone", repalettedThermalDisplayMat_bone);
-
-    //    Mat repalettedThermalDisplayMat_cool;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_cool, COLORMAP_COOL);
-    //    displayUsingOpenCV("cool", repalettedThermalDisplayMat_cool);
-
-    //    Mat repalettedThermalDisplayMat_hot;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_hot, COLORMAP_HOT);
-    //    displayUsingOpenCV("hot", repalettedThermalDisplayMat_hot);
-
-    //    Mat repalettedThermalDisplayMat_hsv;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_hsv, COLORMAP_HSV);
-    //    displayUsingOpenCV("hsv", repalettedThermalDisplayMat_hsv);
-
-    //    Mat repalettedThermalDisplayMat_jet;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_jet, COLORMAP_JET);
-    //    displayUsingOpenCV("jet", repalettedThermalDisplayMat_jet);
-
-    //    Mat repalettedThermalDisplayMat_ocean;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_ocean, COLORMAP_OCEAN);
-    //    displayUsingOpenCV("ocean", repalettedThermalDisplayMat_ocean);
-
-    //    Mat repalettedThermalDisplayMat_parula;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_parula, COLORMAP_PARULA);
-    //    displayUsingOpenCV("parula", repalettedThermalDisplayMat_parula);
-
-    //    Mat repalettedThermalDisplayMat_pink;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_pink, COLORMAP_PINK);
-    //    displayUsingOpenCV("pink", repalettedThermalDisplayMat_pink);
-
-    //    Mat repalettedThermalDisplayMat_spring;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_spring, COLORMAP_SPRING);
-    //    displayUsingOpenCV("spring", repalettedThermalDisplayMat_spring);
-
-    //    Mat repalettedThermalDisplayMat_summer;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_summer, COLORMAP_SUMMER);
-    //    displayUsingOpenCV("summer", repalettedThermalDisplayMat_summer);
-
-    //    Mat repalettedThermalDisplayMat_winter;
-    //    applyColorMap(grayscaleThermalDisplayMat, repalettedThermalDisplayMat_winter, COLORMAP_WINTER);
-    //    displayUsingOpenCV("winter", repalettedThermalDisplayMat_winter);
-
+    repalettedImgMat = Mat::zeros(normalizedThermalMat.size(), CV_8UC3);
     applyColorMap(grayscaleThermalDisplayMat, repalettedImgMat, COLORMAP_INFERNO);
-    //displayUsingOpenCV("inferno", repalettedImgMat);
-
-
 }
 
 bool flirImg::didDisplayRAWsConversionSucceed()
@@ -206,6 +200,32 @@ QString flirImg::getStatusString(int rowNum, int colNum)
     return statusString;
 }
 
+QString flirImg::getSegmentorStatusString(QPoint imgPos)
+{
+    int colNum = imgPos.x();
+    int rowNum = imgPos.y();
+
+    int    blobID      = segmentor->getIsPointKaBlobID(imgPos);
+    int    blobArea    = segmentor->getIsPointKaBlobArea(imgPos);
+    int    numOfBlobs  = segmentor->getNumOfBlobs();
+    //double blobAvgTemp = getIsPointKeBlobKaAvgTemp(imgPos);
+
+    // this should cause a chain of signals/slots to update
+    // the blob avg temparature of this place
+    QString statusString = QString::number(colNum)
+                           + ", "
+                           + QString::number(rowNum)
+                           + " : Blob ID - "
+                           + QString::number(blobID)
+                           + " : Num of Blobs - "
+                           + QString::number(numOfBlobs)
+                           + " : Blob Area - "
+                           + QString::number(blobArea);
+//                           + " : Blob temp "
+//                           + QString::number(blobAvgTemp);
+    return statusString;
+}
+
 #include <unistd.h>
 void flirImg::displayUsingOpenCV(std::string window_name, Mat m)
 {
@@ -220,9 +240,9 @@ double flirImg::getPixelTemperature(int rowNum, int colNum)
     return temperatures.at<double>(rowNum, colNum);
 }
 
-int flirImg::getOrderedRAWval(int rowNum, int colNum)
+unsigned short flirImg::getOrderedRAWval(int rowNum, int colNum)
 {
-    return orderedRAWsMat.at<int>(rowNum, colNum);
+    return orderedRAWsMat.at<unsigned short>(rowNum, colNum);
 }
 
 void flirImg::initializePaths(std::string fimgpath)

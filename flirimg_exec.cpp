@@ -17,7 +17,8 @@ void flirImg::executeZeCommand(QString cmdPath, QStringList cmdArgs, QString &re
     QString fullCmd = cmdPath + " " + cmdArgs.join(" ");
     qDebug() << "flirImg::executeZeCmd trying to execute : " << fullCmd;
 #ifdef Q_OS_WIN32
-    cmdProcess.execute(fullCmd);
+    //qDebug()<<"flirImg::executeZeCommand -- works here";
+    cmdProcess.start(fullCmd);
 #endif
 #ifdef Q_OS_UNIX
     if(t == execute)
@@ -118,7 +119,7 @@ bool flirImg::convertUnorderedRAWsToDisplayPNG()
 }
 
 
-
+#include <QDir>
 QString flirImg::getExiftoolPath()
 {
     QString exiftoolPath;

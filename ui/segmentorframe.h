@@ -31,7 +31,7 @@ private:
 #include <QPushButton>
 #include <QGraphicsPixmapItem>
 
-#include <opencv2/opencv.hpp>
+#include "opencv_headers.h"
 #include "segmentor.h"
 //#include "graphicsscene.h"
 using namespace cv;

@@ -36,7 +36,6 @@ void Segmentor::initSegmentor(Mat srcMat)
     qDebug() << "Segmentor::initSegmentor -- Converted to 8UC3";
   }
 
-
   sParams = new SegmentorParams();
 }
 
@@ -217,9 +216,6 @@ void Segmentor::fillRandomColors()
     }
 }
 
-
-
-
 void Segmentor::colorizeImageSegments()
 {
   using namespace std;
@@ -245,20 +241,22 @@ void Segmentor::colorizeImageSegments()
   //   cout << " Num Points in blob " << (i+1) << " : " << v.size() << endl;
   // }
 
-  qDebug() << " About to do something ";
+  qDebug() << "Segmentor::colorizeImageSegments - About to do something#1";
   auto minElem = std::min_element(std::begin(blobAreas), std::end(blobAreas));
   auto maxElem = std::max_element(std::begin(blobAreas), std::end(blobAreas));
-  minArea     = *minElem;
-  maxArea     = *maxElem;
   numOfBlobs  = blobAreas.size();
+  qDebug() << "Segmentor::colorizeImageSegments - Done with something#2 with size " << numOfBlobs;
+  minArea     = (int)(*minElem);
+  maxArea     = (int)(*maxElem);
+  qDebug() << "Segmentor::colorizeImageSegments - Done with something#3";
+
+  qDebug() << "Segmentor::colorizeImageSegments - Done with something#4";
   std::cout << " Segmentor : colorizeImageSegments() -- ";
   std::cout << " Segmentor Min Area : " << minArea;
   std::cout << " Segmentor Max Area : " << maxArea;
   std::cout << " Segmentor numColours : " << contourSize;
   std::cout << std::endl;
 }
-
-
 
 void Segmentor::generateSelectedBlobIndices()
 {
@@ -294,11 +292,6 @@ void Segmentor::fillSelectedAreasRandomColors()
         }
     }
 }
-
-
-
-
-
 
 
 std::vector<Vec3b>                Segmentor::getColors()     { return blobIDcolors;     }
@@ -358,7 +351,7 @@ int Segmentor::getIsPointKaBlobID(QPoint p)
 
     int index  = markers.at<int>(p.y(), p.x());
     int blobID = index - 1;
-    qDebug() << QString(" Segmentor::getIsPointKaBlob(%1, %2) - %3").arg(p.x()).arg(p.y()).arg(blobID);
+    // qDebug() << QString(" Segmentor::getIsPointKaBlob(%1, %2) - %3").arg(p.x()).arg(p.y()).arg(blobID);
     return blobID;
 }
 
@@ -382,7 +375,7 @@ std::vector<Point2i> Segmentor::getIsPointKeBlobKePoints(QPoint p)
     std::vector<Point2i> pointsOfASingleBlob;
     try{
         pointsOfASingleBlob = blobPoints.at(blobID);
-        qDebug() << "Size of points returned " << pointsOfASingleBlob.size();
+        //qDebug() << "Size of points returned " << pointsOfASingleBlob.size();
     }
     catch(std::exception e){
         qDebug() << e.what();
@@ -390,48 +383,21 @@ std::vector<Point2i> Segmentor::getIsPointKeBlobKePoints(QPoint p)
     return pointsOfASingleBlob;
 }
 
-double Segmentor::getIsPointKeBlobKaAvgTemp(QPoint p)
-{
-    //serious issue here
-    //return fimg->calcBlobAvgTemp(getIsPointKeBlobKePoints(p));
-    // return -1;
+//double Segmentor::getIsPointKeBlobKaAvgTemp(QPoint p)
+//{
+//    // serious issue here
+//    // return fimg->calcBlobAvgTemp(getIsPointKeBlobKePoints(p));
+//    // return -1;
 
-    //    // qDebug() << " tgfsTabbedWindow::isPointKeBlobKaTempNikaaloMadarchod(QPointF p) - Inside madarchod blob nikaalo " << p.x() << ", " << p.y();
-    //    std::vector<Point2i> pts;
-    //    pts = segmentor->getIsPointKaBlob(p);
-    //    std::cout << " Num of points in this blob " << pts.size() << std::endl;
-    //    double avgBlobTemp;
-    //    avgBlobTemp = fimg->calcBlobAvgTemp(pts);
-    //    emit blobAvgTempLeleBhosdike(avgBlobTemp);
-    //    // std::cout << "Avg blob Temp " << avgBlobTemp << endl;
-    //    // std::cout << "Blob num " << blobNum << std::endl;
-}
+////    // qDebug() << " tgfsTabbedWindow::isPointKeBlobKaTempNikaaloMadarchod(QPointF p) - Inside madarchod blob nikaalo " << p.x() << ", " << p.y();
+////    std::vector<Point2i> pts = getIsPointKeBlobKePoints(p);
+////    // std::cout << " Num of points in this blob " << pts.size() << std::endl;
+////    double avgBlobTemp = fimg->calcBlobAvgTemp(pts);
+////    return avgBlobTemp;
+//}
 
 
-QString Segmentor::getStatusString(QPoint imgPos)
-{
-    int colNum = imgPos.x();
-    int rowNum = imgPos.y();
 
-    int    blobID      = getIsPointKaBlobID(imgPos);
-    int    blobArea    = getIsPointKaBlobArea(imgPos);
-    double blobAvgTemp = getIsPointKeBlobKaAvgTemp(imgPos);
-
-    // this should cause a chain of signals/slots to update
-    // the blob avg temparature of this place
-    QString statusString = QString::number(colNum)
-                           + ", "
-                           + QString::number(rowNum)
-                           + " : Blob ID - "
-                           + QString::number(blobID)
-                           + " : Num of Blobs - "
-                           + QString::number(numOfBlobs)
-                           + " : Blob Area - "
-                           + QString::number(blobArea)
-                           + " : Blob temp "
-                           + QString::number(blobAvgTemp);
-    return statusString;
-}
 
 
 void Segmentor::segmentImage()

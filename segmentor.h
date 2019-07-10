@@ -1,9 +1,8 @@
 #ifndef SEGMENTOR_H
 #define SEGMENTOR_H
 
-#include <opencv4/opencv2/opencv.hpp>
-#include <opencv4/opencv2/imgproc/imgproc.hpp>
-#include <opencv4/opencv2/highgui/highgui.hpp>
+#include "opencv_headers.h"
+
 using namespace cv;
 
 #include <QObject>
@@ -32,11 +31,11 @@ public:
     std::vector<std::vector<Point2i>> getBlobPoints();
     int                               getIsPointKaBlobArea(QPoint p);
     int                               getIsPointKaBlobID(QPoint p);
-    double                            getIsPointKeBlobKaAvgTemp(QPoint p);
+//    double                            getIsPointKeBlobKaAvgTemp(QPoint p);
     std::vector<Point2i>              getIsPointKeBlobKePoints(QPoint p);
     std::map<Point2i, int>            pointBlobIDMap;
 
-
+    int  getNumOfBlobs()         { return numOfBlobs; }
 
     Mat  getOriginalMat()        { return src;              }
     Mat  getFilteredMat()        { return imgFiltered;      }

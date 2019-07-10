@@ -66,7 +66,7 @@ void flirImgDisplayerGraphicsView::mouseReleaseEvent(QMouseEvent *event)
     // and QRect::contains().
 }
 
-flirImgFrame::flirImgFrame(const QString &name, flirImg *fimg, Segmentor *segmentor, QWidget *parent)
+flirImgFrame::flirImgFrame(const QString &name, flirImg *fimg, QWidget *parent)
     : QFrame(parent)
 {
     qDebug() << "flirImgFrame : flirImgFrame() constructor begun";
@@ -75,7 +75,7 @@ flirImgFrame::flirImgFrame(const QString &name, flirImg *fimg, Segmentor *segmen
     isLeafDetectionMode = false;
 
     this->fimg      = fimg;
-    this->segmentor = segmentor;
+    this->segmentor = fimg->getSegmentorObject();
     this->imgWidth  = fimg->getRAWThermalImageWidth();
     this->imgHeight = fimg->getRAWThermalImageHeight();
 
@@ -100,11 +100,30 @@ flirImgFrame::flirImgFrame(const QString &name, flirImg *fimg, Segmentor *segmen
     //qDebug() << "flirImgFrame : flirImgFrame() constructor done";
 }
 
+void flirImgFrame::changeUpperRange(int upperCutoff)
+{
+    qDebug() << "flirImgFrame::changeUpperRange - Upper value changed to " << upperCutoff;
+    fimg->getRangedMat(tempRangeSlider->GetLowerValue(), upperCutoff, isRepalettedImageViewMode);
+    displayRangedMat();
+}
+
+void flirImgFrame::changeLowerRange(int lowerCutoff)
+{
+    qDebug() << "flirImgFrame::changeLowerRange - Lower value changed to " << lowerCutoff;
+    fimg->getRangedMat(lowerCutoff, tempRangeSlider->GetUpperValue(), isRepalettedImageViewMode);
+    displayRangedMat();
+}
+
 
 void flirImgFrame::connectEverything()
 {
+    connect(tempRangeSlider,    SIGNAL(lowerValueChanged(int)),
+            this,               SLOT(changeLowerRange(int)));
+    connect(tempRangeSlider,    SIGNAL(upperValueChanged(int)),
+            this,               SLOT(changeUpperRange(int)));
+
+
     connect(resetButton,        SIGNAL(clicked()),         this, SLOT(resetView()));
-    connect(zoomSlider,         SIGNAL(valueChanged(int)), this, SLOT(setupMatrix()));
     connect(rotateSlider,       SIGNAL(valueChanged(int)), this, SLOT(setupMatrix()));
 
     connect(rawImageViewButton,  SIGNAL(toggled(bool)),    this, SLOT(displayImage()));
@@ -126,6 +145,8 @@ void flirImgFrame::connectEverything()
             this,                                          SLOT(setResetButtonEnabled()));
     connect(flirImgDisplayer,                              SIGNAL(mouseMovedPositionSignal(QPoint)),
             this,                                          SLOT(displayPointInfoOnStatusBar(QPoint)));
+
+
 }
 
 QGraphicsView *flirImgFrame::view() const
@@ -133,9 +154,14 @@ QGraphicsView *flirImgFrame::view() const
     return static_cast<QGraphicsView *>(flirImgDisplayer);
 }
 
+void flirImgFrame::updateOverlayTransparency(int alpha)
+{
+    if(isLeafDetectionMode) displayOverlaidImage();
+}
+
 void flirImgFrame::resetView()
 {
-    zoomSlider->setValue(250);
+    //rangeSlider->setValue(250);
     rotateSlider->setValue(0);
     setupMatrix();
     flirImgDisplayer->ensureVisible(QRectF(0, 0, 0, 0));
@@ -177,7 +203,7 @@ void flirImgFrame::createSceneFromMat(Mat imgMat)
     imgScene->addItem(&imgPixmap);
 }
 
-void flirImgFrame::displayOverlaidImage(cv::Mat overlay)
+void flirImgFrame::displayOverlaidImage()
 {
     overlay_alpha    = (double)((double)transparencySlider->value())/(10.0);
 
@@ -189,6 +215,17 @@ void flirImgFrame::displayOverlaidImage(cv::Mat overlay)
 void flirImgFrame::displayOriginalImage()
 {
     baseMat = fimg->getGrayscaleThermalMat().clone();
+    createSceneFromMat(baseMat);
+    flirImgDisplayer->setScene(imgScene);
+}
+
+void flirImgFrame::displayRangedMat()
+{
+    int l, u;
+    l = tempRangeSlider->GetLowerValue();
+    u = tempRangeSlider->GetUpperValue();
+    baseMat = fimg->getRangedMat(l, u, isRepalettedImageViewMode).clone();
+    //baseMat = fimg->getRangedThermalMat().clone();
     createSceneFromMat(baseMat);
     flirImgDisplayer->setScene(imgScene);
 }
@@ -213,7 +250,7 @@ void flirImgFrame::displayImage()
     }
     if(isLeafDetectionMode){
         qDebug() << "flirImgFrame::displayImage -- About to update overlay";
-        displayOverlaidImage(segmentor->getOverlayMat());
+        displayOverlaidImage();
         qDebug() << "flirImgFrame::displayImage -- Done with overlay update";
     }
 }
@@ -223,16 +260,6 @@ void flirImgFrame::changePalette(int c)
     cv::ColormapTypes d = (cv::ColormapTypes)c;
     fimg->changePalette(d);
     displayImage();
-}
-
-void flirImgFrame::zoomIn(int level)
-{
-    zoomSlider->setValue(zoomSlider->value() + level);
-}
-
-void flirImgFrame::zoomOut(int level)
-{
-    zoomSlider->setValue(zoomSlider->value() - level);
 }
 
 void flirImgFrame::updateBlobAvgTemp(double d)
@@ -262,7 +289,7 @@ void flirImgFrame::updateLCDDisplays()
             lcdDisplay1Label->setText("Blob Area");
             lcdDisplay1->display(segmentor->getIsPointKaBlobArea(mousePos));
             lcdDisplay2Label->setText("Blob Avg Temp");
-            lcdDisplay2->display(segmentor->getIsPointKeBlobKaAvgTemp(mousePos));
+            lcdDisplay2->display(fimg->calcBlobAvgTemp(segmentor->getIsPointKeBlobKePoints(mousePos)));
         }
         else{
             lcdDisplay1Label->setText("RAW Sensor Value");
@@ -290,7 +317,7 @@ void flirImgFrame::displayPointInfoOnStatusBar(QPoint imgPos)
     else{
       isMouseOverImage = true;
       if(isLeafDetectionMode){
-        statusBar->showMessage(segmentor->getStatusString(imgPos));
+        statusBar->showMessage(fimg->getSegmentorStatusString(imgPos));
         updateLCDDisplays();
       }
       else{
@@ -298,6 +325,16 @@ void flirImgFrame::displayPointInfoOnStatusBar(QPoint imgPos)
         updateLCDDisplays();
       }
     }
+}
+
+void flirImgFrame::zoomIn()
+{
+    zoomSlider->setValue(zoomSlider->value() + 10);
+}
+
+void flirImgFrame::zoomOut()
+{
+    zoomSlider->setValue(zoomSlider->value() - 10);
 }
 
 void flirImgFrame::rotateLeft()

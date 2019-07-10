@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QPainter>
 #include <QMouseEvent>
+#include <QSlider>
 
 class RangeSlider : public QWidget
 {
