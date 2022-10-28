@@ -1,4 +1,4 @@
-#include "ui/tgfstabbedwindow.h"
+
 #include <QObject>
 #include <QWidget>
 #include <QApplication>
@@ -6,14 +6,17 @@
 #include <QToolBar>
 #include <QAction>
 #include <QMenuBar>
-#include "ui/tgfsmainwindow.h"
 #include <QThread>
+#include <QDebug>
+
+#include "ui/management/tabbedwindow.h"
+
 
 void testOnlyFlirImg()
 {
-    #include <flirimg.h>
+    #include <flirimg/flirimg.h>
     QString currPath = QDir::currentPath();
-    QString imgPath  = currPath + "/nabtdimgs/FLIR1097/FLIR1097.jpg";
+    QString imgPath  = currPath + "/nabtdimgs/FLIR1097.jpg";
     flirImg *fimg;
     fimg = new flirImg();
     fimg->processImage(imgPath.toStdString());
@@ -21,17 +24,11 @@ void testOnlyFlirImg()
 }
 
 
-void oneImageAtATime(tgfsTabbedWindow &w)
+void load_tabs(tabbedWindow &w)
 {
-    flirImgWindow *fW = new flirImgWindow();
-    segmentorWindow *sW = new segmentorWindow();
-
-    w.addView(fW, QString("Flirbaba Viewer"));
-    w.addView(sW, QString("Segmentor"));
-
-
-    w.loadDefaultImage();
-    w.connectEverythingForOneImage();
+    QString currPath = QDir::currentPath();
+    QString imgPath1 = "/home/eicossa/Data/nabtd/new/20160512_011655_303_R.JPG";
+    w.addAnotherTab(imgPath1);
 }
 
 
@@ -39,11 +36,11 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     // when only need to debug the flirImg shizz
-    //testOnlyFlirImg();
+    // testOnlyFlirImg();
 
     // Create tabbed views
-    tgfsTabbedWindow w;
-    oneImageAtATime(w);
+    tabbedWindow w;
+    load_tabs(w);
     w.showMaximized();
 
     return a.exec();
