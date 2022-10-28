@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 5.0.2, 2022-09-02T16:12:40. -->
+<!-- Written by QtCreator 5.0.2, 2022-09-12T15:16:38. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -100,8 +100,8 @@
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
     <value type="int" key="EnableQmlDebugging">0</value>
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/eicossa/Code/wtcd/build-flirTY-Desktop_Qt_5_12_12_GCC_64bit-Debug</value>
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">/home/eicossa/Code/wtcd/build-flirTY-Desktop_Qt_5_12_12_GCC_64bit-Debug</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/opt/zz_qt-bild/build-flirdata-Desktop_Qt_5_12_12_GCC_64bit-Debug</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">/opt/zz_qt-bild/build-flirdata-Desktop_Qt_5_12_12_GCC_64bit-Debug</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -138,8 +138,8 @@
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">2</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/eicossa/Code/wtcd/build-flirTY-Desktop_Qt_5_12_12_GCC_64bit-Release</value>
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">/home/eicossa/Code/wtcd/build-flirTY-Desktop_Qt_5_12_12_GCC_64bit-Release</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/opt/zz_qt-bild/build-flirdata-Desktop_Qt_5_12_12_GCC_64bit-Release</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">/opt/zz_qt-bild/build-flirdata-Desktop_Qt_5_12_12_GCC_64bit-Release</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -178,8 +178,8 @@
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.2">
     <value type="int" key="EnableQmlDebugging">0</value>
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/eicossa/Code/wtcd/build-flirTY-Desktop_Qt_5_12_12_GCC_64bit-Profile</value>
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">/home/eicossa/Code/wtcd/build-flirTY-Desktop_Qt_5_12_12_GCC_64bit-Profile</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/opt/zz_qt-bild/build-flirdata-Desktop_Qt_5_12_12_GCC_64bit-Profile</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">/opt/zz_qt-bild/build-flirdata-Desktop_Qt_5_12_12_GCC_64bit-Profile</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -238,14 +238,15 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/eicossa/ProjWork/flirTY/flirTY/flirTY.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/eicossa/ProjWork/flirTY/flirTY/flirTY.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">flirdata2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/eicossa/ProjWork/flirTY/flirty-tree/flirdata/flirdata.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/home/eicossa/ProjWork/flirTY/flirty-tree/flirdata/flirdata.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/home/eicossa/Code/wtcd/build-flirTY-Desktop_Qt_5_12_12_GCC_64bit-Debug</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/opt/zz_qt-bild/build-flirdata-Desktop_Qt_5_12_12_GCC_64bit-Debug</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
